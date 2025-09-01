@@ -264,7 +264,7 @@ const MemberCard: React.FC<{
         </div>
 
         <p className="text-sm leading-relaxed font-medium italic mb-3" style={{ color: palette.textSecondary }}>
-          "{member.bio}"
+          {member.bio}
         </p>
 
         <div className="flex flex-wrap gap-2 mb-2">
@@ -800,7 +800,7 @@ const MemberDirectory: React.FC = () => {
                No Members Found
              </h3>
             <p className="text-lg font-medium mb-6 max-w-md" style={{ color: palette.textSecondary }}>
-              We couldn't find anyone matching your search. Try exploring different hobbies or expand your location!
+              We couldn&apos;t find anyone matching your search. Try exploring different hobbies or expand your location!
             </p>
             <div className="flex gap-2 flex-wrap justify-center">
               {['Photography', 'Hiking', 'Cooking'].map((hobby) => (
@@ -821,7 +821,7 @@ const MemberDirectory: React.FC = () => {
                     e.currentTarget.style.color = palette.hobbyText;
                   }}
                 >
-                  Try "{hobby}"
+                  Try &quot;{hobby}&quot;
                 </button>
               ))}
             </div>
@@ -880,34 +880,6 @@ const MemberDirectory: React.FC = () => {
               </div>
             </div>
 
-            <div className="relative">
-              <div className="p-8 rounded-2xl relative transition-all duration-300 hover:scale-105 hover:shadow-xl" style={{ backgroundColor: palette.hobbyBg, border: `2px solid ${palette.cardBorder}` }}>
-                <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:rotate-12" style={{ backgroundColor: palette.primary }}>
-                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M6.5 10c-.223 0-.437.034-.65.065.069-.232.14-.468.254-.68.114-.308.292-.575.469-.844.148-.291.409-.488.601-.737.201-.242.475-.403.692-.604.213-.21.492-.315.714-.463.232-.133.434-.28.65-.35.208-.086.39-.16.539-.222.302-.125.474-.197.474-.197L9.758 4.03c0 0-.218.052-.597.144C8.97 4.222 8.737 4.278 8.472 4.345c-.271.05-.56.187-.882.312C7.272 4.799 6.904 4.895 6.562 5.123c-.344.218-.741.4-1.091.692C5.132 6.116 4.723 6.377 4.421 6.76c-.33.358-.656.734-.909 1.162C3.219 8.33 3.02 8.778 2.906 9.221c-.121.408-.199.819-.24 1.231C2.65 10.881 2.650 11.301 2.732 11.781c.097.494.314.945.667 1.308.37.33.84.479 1.333.479.577 0 1.08-.216 1.462-.567.382-.35.609-.847.609-1.367 0-.519-.227-1.017-.609-1.367C5.832 10.216 5.327 10 4.75 10H6.5zM17.5 10c-.223 0-.437.034-.65.065.069-.232.14-.468.254-.68.114-.308.292-.575.469-.844.148-.291.409-.488.601-.737.201-.242.475-.403.692-.604.213-.21.492-.315.714-.463.232-.133.434-.28.65-.35.208-.086.39-.16.539-.222.302-.125.474-.197.474-.197L20.758 4.03c0 0-.218.052-.597.144-.191.048-.424.104-.689.171-.271.05-.56.187-.882.312-.318.142-.686.238-1.028.466-.344.218-.741.4-1.091.692-.339.301-.748.562-1.05.945-.33.358-.656.734-.909 1.162-.293.408-.492.856-.606 1.299-.121.408-.199.819-.24 1.231-.016.429-.016.849.066 1.329.097.494.314.945.667 1.308.37.33.84.479 1.333.479.577 0 1.08-.216 1.462-.567.382-.35.609-.847.609-1.367 0-.519-.227-1.017-.609-1.367C16.832 10.216 16.327 10 15.75 10H17.5z"/>
-                  </svg>
-                </div>
-
-                <div className="mb-6">
-                  <p className="text-lg font-medium italic leading-relaxed" style={{ color: palette.text }}>
-                    "Testimonial"
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <img 
-                    src="https://randomuser.me/api/portraits/women/32.jpg" 
-                    alt="Sarah's profile" 
-                    className="w-12 h-12 rounded-full object-cover ring-3"
-                    style={{ '--tw-ring-color': palette.primary } as React.CSSProperties}
-                  />
-                  <div>
-                    <div className="font-bold" style={{ color: palette.text }}>Person</div>
-                    <div className="text-sm" style={{ color: palette.textSecondary }}>Occupation</div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
         </div>
