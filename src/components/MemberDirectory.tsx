@@ -209,7 +209,7 @@ const MemberCard: React.FC<{
       }, 320);
     }
   };
-  
+  MemberCard.displayName = "MemberCard";
   return (
     <>
     <div
