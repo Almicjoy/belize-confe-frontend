@@ -86,7 +86,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   };
 
   try {
-    const result = await fetch("http://localhost:4000/api/register", {
+    const result = await fetch("https://belize-confe-backend.onrender.com/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
