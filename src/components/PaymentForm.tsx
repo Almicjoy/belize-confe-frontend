@@ -94,7 +94,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
     const data = await result.json();
 
-    console.log("Payment Response:", data.bankResponse);
+    alert(data.bankResponse);
 
     // Check if the bank returned a formURL
     if (data.bankResponse?.formUrl) {
