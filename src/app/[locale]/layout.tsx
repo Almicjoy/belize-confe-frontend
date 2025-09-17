@@ -5,11 +5,11 @@ import "../globals.css";
 
 interface LocaleLayoutProps {
   children: ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>; // Changed to Promise
 }
 
-export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
-  const { locale } = params;
+export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
+  const { locale } = await params; // Await the params
 
   return (
     <html lang={locale}>
