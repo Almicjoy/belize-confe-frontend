@@ -1,16 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation"; // if Next.js
-
-const palette = {
-  primary: "#3cc4ffff",
-  text: "#2D2D2D",
-  cardBg: "#FFFFFF",
-  cardBorder: "#b2f3ffff",
-  cardShadow: "0 4px 12px rgba(60, 190, 255, 0.08)",
-  accent: "#00d0ffff",
-  midday: "#2C5282",
-  textSecondary: "#7F8C8D",
-};
+import { palette } from "@/lib/palette";
 
 const AccountPopup = ({
     trigger,

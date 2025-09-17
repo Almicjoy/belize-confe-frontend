@@ -3,40 +3,18 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import DOMPurify from "dompurify";
-
-const palette = {
-  background: '#ffffffff',
-  cardBg: '#FFFFFF',
-  cardBorder: '#b2f3ffff',
-  cardShadow: '0 4px 12px rgba(60, 190, 255, 0.08)',
-  accent: '#00d0ffff',
-  primary: '#3cc4ffff',
-  secondary: '#66f2ffff',
-  tertiary: '#509cffff',
-  midday: '#2C5282',
-  middayLight: '#4299E1',
-  middayDark: '#1A365D',
-  text: '#2D2D2D',
-  textSecondary: '#7F8C8D',
-  textLight: '#B0B0B0',
-  hobbyBg: '#e0fcffff',
-  hobbyText: '#3c6dffff',
-  success: '#4CAF50',
-  white: '#FFFFFF',
-  lightOrange: '#f0feffff',
-};
+import { palette } from "@/lib/palette";
 
 export default function PaymentForm() {
   const [formData, setFormData] = useState({
     amount: "500.00",
-    description: "Belize 2026 Conference Registration - Cupo #1",
+    description: "Belize 2026 Conference Registration",
     returnUrl: process.env.NEXT_PUBLIC_RETURN_URL,
     orderNumber: uuidv4(),
     clientId: "",
     email: "",
     fullName: "",
     dob: "",
-    shirtSize: "",
     clubName: "",
     country: "",
     dynamicCallbackUrl: process.env.NEXT_PUBLIC_CALLBACK_URL,
@@ -79,7 +57,6 @@ const handleSubmit = async (e: React.FormEvent) => {
     email: sanitizeInput(formData.email),
     fullName: sanitizeInput(formData.fullName),
     dob: sanitizeInput(formData.dob),
-    shirtSize: sanitizeInput(formData.shirtSize),
     clubName: sanitizeInput(formData.clubName),
     country: sanitizeInput(formData.country),
     dynamicCallbackUrl: sanitizeInput(formData.dynamicCallbackUrl ?? ""),
@@ -162,26 +139,6 @@ const handleSubmit = async (e: React.FormEvent) => {
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2"
             style={{ borderColor: palette.primary }}
           />
-        </div>
-
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Shirt Size</label>
-          <select
-            name="shirtSize"
-            value={formData.shirtSize}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2"
-            style={{ borderColor: palette.primary }}
-          >
-            <option value="">Select size</option>
-            <option value="XS">XS</option>
-            <option value="S">S</option>
-            <option value="M">M</option>
-            <option value="L">L</option>
-            <option value="XL">XL</option>
-            <option value="XXL">XXL</option>
-          </select>
         </div>
 
         <div className="mb-4">
