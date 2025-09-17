@@ -273,7 +273,7 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
             {/* Sign Up Link */}
             <div className="text-center mt-8">
             <p style={{ color: palette.textSecondary }}>
-                Don't have an account?{' '}
+                Don&lsquo;t have an account?{' '}
                 <Link
                 href="/register"
                 className="font-semibold hover:underline transition-colors duration-200"
