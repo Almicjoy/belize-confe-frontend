@@ -1,17 +1,16 @@
 // app/[locale]/layout.tsx
 import type { ReactNode } from "react";
-import Link from "next/link";
-import SessionWrapper from "./SessionWrapper"; // This should work now
+import SessionWrapper from "./SessionWrapper";
 import "../globals.css";
 
-export default function LocaleLayout({
-  children,
-  params,
-}: {
+interface LocaleLayoutProps {
   children: ReactNode;
   params: { locale: string };
-}) {
+}
+
+export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
   const { locale } = params;
+
   return (
     <html lang={locale}>
       <body>
