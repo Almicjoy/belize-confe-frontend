@@ -49,9 +49,7 @@ const SkeletonCard: React.FC = () => (
   </div>
 );
 
-const MemberCard: React.FC<{
-
-}> = React.memo(() => {
+const MemberCard: React.FC = React.memo(() => {
 
   const { locale } = useParams(); // pulls from [locale] in URL
   const { t } = useTranslation();

@@ -5,6 +5,7 @@ import { useParams, usePathname } from "next/navigation";
 import en from "@/locales/en/common.json";
 import es from "@/locales/es/common.json";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dictionaries: Record<string, any> = { en, es };
 
 // Custom hook to get current locale

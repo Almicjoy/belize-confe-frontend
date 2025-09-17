@@ -382,7 +382,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
                   style={{ color: palette.success }}
                 >
                   <Check className="w-4 h-4" />
-                  Promo code "{promoCode}" applied successfully!
+                  Promo code &ldquo;{promoCode}&rdquo; applied successfully!
                 </p>
               )}
             </div>
@@ -432,7 +432,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
             className="text-lg font-semibold mb-4 text-center"
             style={{ color: palette.text }}
           >
-            What's Included in All Plans
+            What&lsquo;s Included in All Plans
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div className="flex items-center">
