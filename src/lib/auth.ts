@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 // Fake DB for demo — replace with Prisma, Mongo, etc.
 const users = [
   { 
-    id: "1", 
+    id: "1001", 
     email: "test@example.com", 
     firstName: "Alessa",
     lastName: "Castillo",

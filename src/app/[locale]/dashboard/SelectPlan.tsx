@@ -17,6 +17,7 @@ interface Plan {
 }
 
 interface SessionData {
+    id?: string,
     email?: string;
     firstName?: string;
     lastName?: string;
@@ -110,7 +111,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
         )}`,
         returnUrl: process.env.NEXT_PUBLIC_RETURN_URL || "",
         orderNumber: uuidv4(),
-        clientId: "",
+        clientId: sessionData.id,
         email: sessionData.email,
         fullName: `${sessionData.firstName} ${sessionData.lastName ?? ""}`.trim(),
         dynamicCallbackUrl: process.env.NEXT_PUBLIC_CALLBACK_URL || "",

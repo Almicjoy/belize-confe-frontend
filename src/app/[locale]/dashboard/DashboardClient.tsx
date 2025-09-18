@@ -95,10 +95,11 @@ export default function DashboardClient() {
           <div className="mb-8 flex items-center justify-between">
           {/* Dismissable message */}
 {/* Dismissable Payment Status Overlay */}
+          {/* Dismissable Payment Status Overlay */}
           {orderId && !paymentMessage && (
-            <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4">
+            <div className="fixed top-25 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4">
               <div className={`p-4 rounded-lg shadow-lg border-l-4 ${
-                payment?.status === "1" 
+                payment?.status === "1" || payment?.status === "DEPOSITED" 
                   ? "bg-green-50 border-green-400 text-green-800" 
                   : "bg-red-50 border-red-400 text-red-800"
               }`}>
@@ -109,10 +110,19 @@ export default function DashboardClient() {
                     ) : payment ? (
                       <div className="space-y-1">
                         <p className="font-medium">
-                          {payment.status === "1" ? "✅ Payment Successful!" : "❌ Payment Failed or Pending"}
+                          {payment.status === "1" || payment.status === "DEPOSITED" 
+                            ? "✅ Payment Successful!" 
+                            : payment.status === "0" || payment.status === "DECLINED" 
+                              ? "❌ Payment Failed"
+                              : "⏳ Payment Pending"
+                          }
                         </p>
-                        <p className="text-sm opacity-80">Order: {payment.orderNumber}</p>
-                        <p className="text-sm opacity-80">Status: {payment.status}</p>
+                        {/* <p className="text-sm opacity-80">Payment Status: {
+                          payment.status === "1" || payment.status === "DEPOSITED" ? "Success" :
+                          payment.status === "0" || payment.status === "DECLINED" ? "Failed" :
+                          payment.status === "PENDING" ? "Pending" :
+                          payment.status
+                        }</p> */}
                       </div>
                     ) : (
                       <p className="font-medium">No payment record found for order {orderId}</p>
