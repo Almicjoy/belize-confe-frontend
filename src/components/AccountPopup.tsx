@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation"; // if Next.js
 import { palette } from "@/lib/palette";

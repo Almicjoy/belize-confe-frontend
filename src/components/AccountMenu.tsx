@@ -2,14 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import { User } from "lucide-react";
 import { palette } from "@/lib/palette";
+import React from "react";
 
-export default function AccountMenu() {
+export default function AccountMenu({ locale }: { locale: string | string[]}) {
   const [open, setOpen] = useState(false);
-  const params = useParams();
-  const locale = params.locale || "en"; // fallback to 'en'
 
   return (
     <div className="relative inline-block text-left">

@@ -54,7 +54,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 }} palette={palette} />
           <MenuButton text={t("promos")} onClick={scrollToConnect} palette={palette} />
           <MenuButton text={t("preconfe")} onClick={scrollToAbout} palette={palette} />
-          <AccountMenu/>
+          <AccountMenu locale={locale}/>
           <LanguageSwitcher/>
           
         </div>
@@ -115,7 +115,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 palette={palette}
                 mobile
               />
-              <AccountMenu/>
+              <AccountMenu locale={locale}/>
               <LanguageSwitcher/>
             </div>
           </div>
