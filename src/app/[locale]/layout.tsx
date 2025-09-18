@@ -1,3 +1,5 @@
+
+
 // app/[locale]/layout.tsx
 import type { ReactNode } from "react";
 import SessionWrapper from "./SessionWrapper";

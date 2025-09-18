@@ -137,41 +137,6 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
     } finally {
       setIsProcessing(false);
     }
-
-    //   if (data.formURL) {
-    //     // Payment successful
-    //     setUserState({
-    //       hasSelectedPlan: true,
-    //       selectedPlan: `${plan.installments} payment${plan.installments > 1 ? "s" : ""} of $${plan.paymentAmount.toFixed(2)}`,
-    //     });
-
-    //     setMessage({
-    //       type: "success",
-    //       text: `Payment successful! Redirecting to payment gateway...`,
-    //     });
-
-    //     // Optional: redirect after showing message briefly
-    //     setTimeout(() => {
-    //       window.location.href = data.formURL;
-    //     }, 2000);
-    //   } else if (data.errorCode) {
-    //     // Payment failed
-    //     setMessage({
-    //       type: "error",
-    //       text: `Payment failed: ${data.errorMessage}`,
-    //     });
-    //   } else {
-    //     setMessage({
-    //       type: "error",
-    //       text: "Unknown response from server",
-    //     });
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   setMessage({ type: "error", text: "Payment error occurred." });
-    // } finally {
-    //   setIsProcessing(false);
-    // }
   };
 
   const handleApplyPromo = () => {
