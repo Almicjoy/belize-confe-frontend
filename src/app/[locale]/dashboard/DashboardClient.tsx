@@ -55,7 +55,7 @@ export default function DashboardClient() {
 
     setPaymentLoading(true);
 
-    fetch(`https://belize-confe-backend.onrender.com/api/payment?mdOrder=${orderId}`)
+    fetch(`https://belize-confe-backend.onrender.com/api/payment/${orderId}`)
       .then((res) => res.json())
       .then((data) => {
         setPayment(data);
