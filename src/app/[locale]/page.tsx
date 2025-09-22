@@ -64,12 +64,7 @@ export default function Home() {
 
 
       {/* Main content */}
-      <MemberDirectory 
-        headerRef={headerRef}
-        connectRef={connectRef}
-        aboutRef={aboutRef}
-        accommodationRef={accommodationRef}
-      />
+      <MemberDirectory/>
     </div>
   );
 }
