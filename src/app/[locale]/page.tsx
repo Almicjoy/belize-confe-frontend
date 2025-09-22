@@ -9,6 +9,7 @@ export default function Home() {
   const headerRef = useRef<HTMLElement>(null);
   const connectRef = useRef<HTMLElement>(null);
   const aboutRef = useRef<HTMLElement>(null);
+  const accommodationRef = useRef<HTMLElement>(null);
   
   const { t, locale } = useTranslation();
   
@@ -67,6 +68,7 @@ export default function Home() {
         headerRef={headerRef}
         connectRef={connectRef}
         aboutRef={aboutRef}
+        accommodationRef={accommodationRef}
       />
     </div>
   );

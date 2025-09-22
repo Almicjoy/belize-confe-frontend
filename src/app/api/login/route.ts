@@ -1,15 +1,27 @@
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const { email, password } = body;
+  try {
+    const { email, password } = await req.json();
 
-  // TODO: Check DB (validate credentials)
-  console.log("Logging in:", email, password);
+    // Call your backend API that handles bcrypt + DB lookup
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+      credentials: "include", // optional, if using cookies
+    });
 
-  if (email === "test@example.com" && password === "password") {
-    return NextResponse.json({ message: "Login successful!", token: "fake-jwt-token" });
+    const data = await res.json();
+
+    if (!res.ok) {
+      // Forward backend error
+      return NextResponse.json(data, { status: res.status });
+    }
+
+    return NextResponse.json(data); // returns user object
+  } catch (err) {
+    console.error("Login route error:", err);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
-
-  return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
 }

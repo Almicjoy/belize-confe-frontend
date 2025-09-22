@@ -17,7 +17,8 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     <html lang={locale}>
       <body>
         <main>
-          <SessionWrapper>{children}</SessionWrapper>
+          {/* <SessionWrapper>{children}</SessionWrapper> */}
+          {children}
           <div id="modal-root"></div>
         </main>
       </body>

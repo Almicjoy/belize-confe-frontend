@@ -1,9 +1,20 @@
 "use client";
+
+import React from "react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "@/utils/useTranslation";
+
 import { Eye, EyeOff, User, Mail, Lock, Calendar, Globe, Building, ArrowRight, Sparkles, AlertCircle, CheckCircle } from 'lucide-react';
 
 
-export default function RegisterPage() {
+export default function RegisterPage({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>; // 👈 notice params is a Promise now
+}) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,6 +30,11 @@ export default function RegisterPage() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { locale } = React.use(params);
+
+  const { t } = useTranslation();
+
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -58,8 +74,15 @@ export default function RegisterPage() {
     });
 
     const data = await res.json();
-    setMessage(data.message);
-    setIsSuccess(res.ok);
+
+    if (res.ok) {
+      // ✅ Redirect to login with success message
+      router.push(`/${locale}/login?message=${encodeURIComponent("Registration successful! Please log in.")}`);
+    } else {
+      setMessage(data.message);
+      setIsSuccess(res.ok);
+    }
+
     setIsLoading(false);
   };
 
@@ -114,10 +137,10 @@ export default function RegisterPage() {
               <User size={24} className="text-white" />
             </div>
             <h1 className="text-3xl font-bold mb-2 text-gray-800">
-              Sign Up for LaConfe26
+              {t('signUp')}
             </h1>
             <p className="text-gray-600">
-              Create your account to get started
+              {t('createAccountStart')}
             </p>
           </div>
 
@@ -146,7 +169,7 @@ export default function RegisterPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-800">
-                    First Name
+                    {t('firstName')}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -157,7 +180,7 @@ export default function RegisterPage() {
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       className="w-full pl-12 pr-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
-                      placeholder="Enter your first name"
+                      placeholder={t('enterFirstName')}
                       required
                     />
                   </div>
@@ -165,7 +188,7 @@ export default function RegisterPage() {
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-800">
-                    Last Name
+                    {t('lastName')}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -176,7 +199,7 @@ export default function RegisterPage() {
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       className="w-full pl-12 pr-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
-                      placeholder="Enter your last name"
+                      placeholder={t('enterLastName')}
                       required
                     />
                   </div>
@@ -186,7 +209,7 @@ export default function RegisterPage() {
               {/* Email Field */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-800">
-                  Email Address
+                  {t('email')}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -197,7 +220,7 @@ export default function RegisterPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-12 pr-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
-                    placeholder="Enter your email"
+                    placeholder={t('enterEmail')}
                     required
                   />
                 </div>
@@ -207,7 +230,7 @@ export default function RegisterPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-800">
-                    Country
+                    {t('country')}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -219,7 +242,7 @@ export default function RegisterPage() {
                       className="w-full pl-12 pr-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm appearance-none cursor-pointer bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
                       required
                     >
-                      <option value="">Select your country</option>
+                      <option value="">{t('enterCountry')}</option>
                         {countries.map((c) => (
                             <option key={c} value={c}>
                             {c}
@@ -231,7 +254,7 @@ export default function RegisterPage() {
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-800">
-                    Club Name
+                    {t('club')}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -243,7 +266,7 @@ export default function RegisterPage() {
                       className="w-full pl-12 pr-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm appearance-none cursor-pointer bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
                       required
                     >
-                      <option value="">Select your club</option>
+                      <option value="">{t('selectClub')}</option>
                         {clubs.map((c) => (
                         <option key={c} value={c}>{c}</option>
                         ))}
@@ -255,7 +278,7 @@ export default function RegisterPage() {
               {/* Birthday Field */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-800">
-                  Date of Birth
+                  {t('dob')}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -275,7 +298,7 @@ export default function RegisterPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-800">
-                    Password
+                    {t('password')}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -286,7 +309,7 @@ export default function RegisterPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="w-full pl-12 pr-12 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
-                      placeholder="Create a password"
+                      placeholder={t('createPassword')}
                       required
                     />
                     <button
@@ -304,7 +327,7 @@ export default function RegisterPage() {
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-800">
-                    Confirm Password
+                    {t('confirmPassword')}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -315,7 +338,7 @@ export default function RegisterPage() {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className="w-full pl-12 pr-12 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
-                      placeholder="Confirm your password"
+                      placeholder={t('confirmPassword')}
                       required
                     />
                     <button
@@ -341,14 +364,7 @@ export default function RegisterPage() {
                   required
                 />
                 <label htmlFor="terms" className="text-sm cursor-pointer text-gray-600">
-                  I agree to the{' '}
-                  <a href="#" className="hover:underline text-blue-400">
-                    Terms of Service
-                  </a>
-                  {' '}and{' '}
-                  <a href="#" className="hover:underline text-blue-400">
-                    Privacy Policy
-                  </a>
+                  {t('accountAgree')}
                 </label>
               </div>
 
@@ -366,7 +382,7 @@ export default function RegisterPage() {
                   <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
                 ) : (
                   <>
-                    <span>Create Account</span>
+                    <span>{t('createAccount')}</span>
                     <ArrowRight size={20} />
                   </>
                 )}
@@ -376,12 +392,12 @@ export default function RegisterPage() {
             {/* Sign In Link */}
             <div className="text-center mt-8">
               <p className="text-gray-600">
-                Already have an account?{' '}
+                {t('haveAccount')}{' '}
                 <a 
                   href="#" 
                   className="font-semibold hover:underline transition-colors duration-200 text-blue-400"
                 >
-                  Sign in
+                  {t('signIn')}
                 </a>
               </p>
             </div>

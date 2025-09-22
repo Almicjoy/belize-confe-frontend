@@ -1,21 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
-import bcrypt from "bcrypt";
-
-// Fake DB for demo — replace with Prisma, Mongo, etc.
-const users = [
-  { 
-    id: "1001", 
-    email: "test@example.com", 
-    firstName: "Alessa",
-    lastName: "Castillo",
-    country: "Belize",
-    club: "Rotaract Club of Orange Walk",
-    hasSelectedPlan: false,
-    selectedPlan: null,
-    passwordHash: bcrypt.hashSync("password", 10) },
-];
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -26,11 +11,27 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const user = users.find(u => u.email === credentials?.email);
-        if (user && bcrypt.compareSync(credentials?.password || "", user.passwordHash)) {
-          return user; // return the whole user object
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: credentials?.email,
+                password: credentials?.password,
+              }),
+            }
+          );
+
+          if (!res.ok) return null; // invalid credentials
+
+          const user = await res.json();
+          return user; // must return an object with at least an `id`
+        } catch (err) {
+          console.error("Authorize error:", err);
+          return null;
         }
-        return null;
       },
     }),
   ],
@@ -42,22 +43,23 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.email = user.email;
-        token.firstName = user.firstName as string | null;
-        token.lastName = user.lastName as string | null;
-        token.country = user.country as string | null;
-        token.club = user.club as string | null;
-        token.hasSelectedPlan = user.hasSelectedPlan as boolean | null;
-        token.selectedPlan = user.selectedPlan as string | null;
+        token.firstName = user.firstName ?? null;
+        token.lastName = user.lastName ?? null;
+        token.country = user.country ?? null;
+        token.clubName = user.clubName ?? null;
+        token.hasSelectedPlan = user.hasSelectedPlan ?? null;
+        token.selectedPlan = user.selectedPlan ?? null;
       }
       return token;
     },
     async session({ session, token }) {
       session.user = {
-        email: token.email,
+        ...session.user,
+        id: token.id as string,
         firstName: token.firstName as string | null,
         lastName: token.lastName as string | null,
         country: token.country as string | null,
-        club: token.club as string | null,
+        clubName: token.clubName as string | null,
         hasSelectedPlan: token.hasSelectedPlan as boolean | null,
         selectedPlan: token.selectedPlan as string | null,
       };
@@ -66,4 +68,3 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
-

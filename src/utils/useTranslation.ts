@@ -32,23 +32,20 @@ export function useCurrentLocale(): string {
 }
 
 // Translation hook
-export function useTranslation() {
+export function useTranslation<T = string>() {
   const locale = useCurrentLocale();
   
   return {
-    t: (key: string, vars: Record<string, string> = {}) => {
+    t: (key: string, vars: Record<string, string> = {}): T => {
       const dict = dictionaries[locale] || dictionaries["en"];
-
-      // Support nested keys like "promoData.name"
       const value = key.split(".").reduce((obj, k) => obj?.[k], dict);
-      let text = typeof value === "string" ? value : key;
+      let text: unknown = typeof value === "string" ? value : value;
 
-      // Replace variables like {{name}}
       Object.keys(vars).forEach((v) => {
-        text = text.replace(`{{${v}}}`, vars[v]);
+        if (typeof text === "string") text = text.replace(`{{${v}}}`, vars[v]);
       });
 
-      return text;
+      return text as T;
     },
     locale
   };

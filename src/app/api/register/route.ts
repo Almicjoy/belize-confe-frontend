@@ -1,11 +1,23 @@
+// app/api/user/route.ts
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const { email, password } = body;
+  try {
+    const body = await req.json();
 
-  // TODO: Save to DB (hashed password, validation, etc.)
-  console.log("Registering:", email, password);
+    // Forward the request to your backend API
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
 
-  return NextResponse.json({ message: "User registered successfully!" });
+    const data = await response.json();
+
+    // Forward the response back to the client
+    return NextResponse.json(data, { status: response.status });
+  } catch (error) {
+    console.error("Error calling backend API:", error);
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
+  }
 }
