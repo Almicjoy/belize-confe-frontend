@@ -144,6 +144,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
         dynamicCallbackUrl: process.env.NEXT_PUBLIC_CALLBACK_URL || "",
         installments: plan.installments,
         promoCode: promoApplied ? promoCode : null,
+        selectedRoom: selectedRoom,
       };
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/register`, {
