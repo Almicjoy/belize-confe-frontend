@@ -56,9 +56,14 @@ const Navbar: React.FC<NavbarProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Determine text color based on scroll position
-  const getTextColor = () => {
+  // Determine text color based on scroll position (only for desktop)
+  const getDesktopTextColor = () => {
     return isScrolledPastLanding ? palette.textSecondary : palette.white;
+  };
+
+  // Mobile always uses white
+  const getMobileTextColor = () => {
+    return palette.textSecondary;
   };
 
   return (
@@ -93,31 +98,31 @@ const Navbar: React.FC<NavbarProps> = ({
                 text={t("home")} 
                 onClick={() => router.push("/")} 
                 palette={palette} 
-                textColor={getTextColor()}
+                textColor={getDesktopTextColor()}
               />
               <MenuButton 
                 text={t("promos")} 
                 onClick={scrollToPlans} 
                 palette={palette}
-                textColor={getTextColor()}
+                textColor={getDesktopTextColor()}
               />
               <MenuButton 
                 text={t("accommodations")} 
                 onClick={scrollToAccommodations} 
                 palette={palette}
-                textColor={getTextColor()}
+                textColor={getDesktopTextColor()}
               />
               <MenuButton 
                 text={t("sponsors")} 
                 onClick={scrollToSponsors} 
                 palette={palette}
-                textColor={getTextColor()}
+                textColor={getDesktopTextColor()}
               />
               <MenuButton 
                 text={t("preconfe")} 
                 onClick={scrollToPreconfe} 
                 palette={palette}
-                textColor={getTextColor()}
+                textColor={getDesktopTextColor()}
               />
 
               <AccountMenu locale={locale} />
@@ -136,7 +141,7 @@ const Navbar: React.FC<NavbarProps> = ({
         <button
           className="md:hidden p-3 rounded-xl transition-all duration-300 hover:bg-white/10 active:scale-95"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          style={{ color: getTextColor() }}
+          style={{ color: getMobileTextColor() }} // Always white on mobile
         >
           <svg
             className="w-6 h-6 transition-transform duration-300"
@@ -188,7 +193,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         setIsMobileMenuOpen(false);
                       }}
                       palette={palette}
-                      textColor={getTextColor()}
+                      textColor={getMobileTextColor()} // Always white on mobile
                       mobile
                     />
                     <MenuButton
@@ -198,7 +203,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         setIsMobileMenuOpen(false);
                       }}
                       palette={palette}
-                      textColor={getTextColor()}
+                      textColor={getMobileTextColor()} // Always white on mobile
                       mobile
                     />
                     <MenuButton
@@ -208,7 +213,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         setIsMobileMenuOpen(false);
                       }}
                       palette={palette}
-                      textColor={getTextColor()}
+                      textColor={getMobileTextColor()} // Always white on mobile
                       mobile
                     />
                     <MenuButton
@@ -218,7 +223,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         setIsMobileMenuOpen(false);
                       }}
                       palette={palette}
-                      textColor={getTextColor()}
+                      textColor={getMobileTextColor()} // Always white on mobile
                       mobile
                     />
                     <MenuButton
@@ -228,7 +233,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         setIsMobileMenuOpen(false);
                       }}
                       palette={palette}
-                      textColor={getTextColor()}
+                      textColor={getMobileTextColor()} // Always white on mobile
                       mobile
                     />
 
