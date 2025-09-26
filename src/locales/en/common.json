@@ -53,7 +53,8 @@
             "paymentSchedule": "Pay in full today",
             "savings": "Best Value",
             "popular": false,
-            "features": ["Immediate access", "No processing fees", "One-time payment"]
+            "features": ["Immediate access", "One-time payment"],
+            "cutoff": "2026-03-31"
         },
         {
             "id": 2,
@@ -63,17 +64,19 @@
             "paymentSchedule": "$250 today, $250 in 30 days",
             "savings": null,
             "popular": false,
-            "features": ["Split into 2 payments", "30-day intervals", "No additional fees"]
+            "features": ["Split into 2 payments", "30-day intervals"],
+            "cutoff": "2026-02-28"
         },
         {
             "id": 3,
             "installments": 3,
-            "paymentAmount": 166.67,
+            "paymentAmount": 167,
             "totalAmount": 500,
-            "paymentSchedule": "$166.67 every 30 days",
+            "paymentSchedule": "$167 every 30 days",
             "savings": null,
             "popular": false,
-            "features": ["Most popular option", "Flexible payments", "30-day intervals"]
+            "features": ["Flexible payments", "30-day intervals"],
+            "cutoff": "2026-01-31"
         },
         {
             "id": 4,
@@ -83,7 +86,8 @@
             "paymentSchedule": "$125 every 30 days",
             "savings": "Most Flexible",
             "popular": false,
-            "features": ["Maximum flexibility", "Lowest per payment", "30-day intervals"]
+            "features": ["Lowest per payment", "30-day intervals"],
+            "cutoff": "2025-08-31"
         }
     ],
     "paymentExtras": "Secure payments • Full conference access",
@@ -92,7 +96,7 @@
     "resortWebsite": "View Resort Website",
     "room": [
         {
-            "id": 1,
+            "id": 1001,
             "name": "Luxury Deluxe King",
             "guests": 2,
             "description": "Perfect for couples or solo travelers with a companion. Comfortable and intimate space.",
@@ -102,7 +106,7 @@
             "extraFees": true
         },
         {
-            "id": 2,
+            "id": 1002,
             "name": "Deluxe Queen Room",
             "guests": 4,
             "description": "Ideal for small families or groups of friends. Spacious layout with modern amenities.",
@@ -112,7 +116,7 @@
             "extraFees": false
         },
         {
-            "id": 3,
+            "id": 1003,
             "name": "Deluxe Queen Room",
             "guests": 5,
             "description": "Luxury suite perfect for larger groups. Premium space with enhanced comfort and style.",
@@ -179,7 +183,7 @@
     "paymentSchedule": "Payment Schedule",
     "planFeatures": "Plan Features",
     "installment": "installment",
-    "managePlan": "Manage Plan",
+    "managePlan": "Make Next Payment",
     "active": "Active",
     "noDetails": "Plan details not available.",
     "startPlan": "Ready to Get Started?",
@@ -208,7 +212,10 @@
     "selected": "Selected",
     "payment1": "Payment",
     "payments": "Payments",
-    "onetime": "one-time"
+    "onetime": "one-time",
+    "left": "Left",
+    "soldOut": "Sold Out",
+    "ends": "Ends"
 
 
 

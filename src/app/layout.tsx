@@ -40,41 +40,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-  // const scrollToConnect = () => {
-  //   if (plansRef.current) {
-  //     window.scrollTo({
-  //       top: plansRef.current.offsetTop - getHeaderHeight(),
-  //       behavior: "smooth",
-  //     });
-  //   }
-  // };
-
-  // const scrollToAccommodations = () => {
-  //   if (accommodationRef.current) {
-  //     window.scrollTo({
-  //       top: accommodationRef.current.offsetTop - getHeaderHeight(),
-  //       behavior: "smooth",
-  //     });
-  //   }
-  // };
-
-  // const scrollToSponsors = () => {
-  //   if (sponsorsRef.current) {
-  //     window.scrollTo({
-  //       top: sponsorsRef.current.offsetTop - getHeaderHeight(),
-  //       behavior: "smooth",
-  //     });
-  //   }
-  // };
-
-  // const scrollToPreconfe = () => {
-  //   if (preconfeRef.current) {
-  //     window.scrollTo({
-  //       top: preconfeRef.current.offsetTop - getHeaderHeight(),
-  //       behavior: "smooth",
-  //     });
-  //   }
-  // };
 
   return (
     <html lang="en">

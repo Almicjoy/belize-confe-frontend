@@ -53,7 +53,8 @@
             "paymentSchedule": "Paga todo hoy",
             "savings": "Mejor Valor",
             "popular": false,
-            "features": ["Acceso inmediato", "Sin cargos de procesamiento", "Pago único"]
+            "features": ["Acceso inmediato", "Pago único"],
+            "cutoff": "2026-03-31"
         },
         {
             "id": 2,
@@ -63,17 +64,19 @@
             "paymentSchedule": "$250 hoy, $250 en 30 días",
             "savings": null,
             "popular": false,
-            "features": ["Dividido en 2 pagos", "Intervalos de 30 días", "Sin cargos adicionales"]
+            "features": ["Dividido en 2 pagos", "Intervalos de 30 días"],
+            "cutoff": "2026-02-28"
         },
         {
             "id": 3,
             "installments": 3,
-            "paymentAmount": 166.67,
+            "paymentAmount": 167,
             "totalAmount": 500,
-            "paymentSchedule": "$166.67 cada 30 días",
+            "paymentSchedule": "$167 cada 30 días",
             "savings": null,
             "popular": false,
-            "features": ["Opción más popular", "Pagos flexibles", "Intervalos de 30 días"]
+            "features": [ "Pagos flexibles", "Intervalos de 30 días"],
+            "cutoff": "2026-01-31"
         },
         {
             "id": 4,
@@ -83,7 +86,8 @@
             "paymentSchedule": "$125 cada 30 días",
             "savings": "Más Flexible",
             "popular": false,
-            "features": ["Máxima flexibilidad", "Pago más bajo por cuota", "Intervalos de 30 días"]
+            "features": [ "Pago más bajo por cuota", "Intervalos de 30 días"],
+            "cutoff": "2025-08-31"
         }
     ],
     "paymentExtras": "Pagos seguros • Acceso completo a la conferencia",
@@ -92,7 +96,7 @@
     "resortWebsite": "Ver Sitio Web del Resort",
     "room": [
         {
-            "id": 1,
+            "id": 1001,
             "name": "Luxury Deluxe King",
             "guests": 2,
             "description": "Perfecto para parejas o viajeros individuales con acompañante. Espacio cómodo e íntimo.",
@@ -102,7 +106,7 @@
             "extraFees": true
         },
         {
-            "id": 2,
+            "id": 1002,
             "name": "Deluxe Queen Room",
             "guests": 4,
             "description": "Ideal para familias pequeñas o grupos de amigos. Distribución espaciosa con comodidades modernas.",
@@ -112,7 +116,7 @@
             "extraFees": false
         },
         {
-            "id": 3,
+            "id": 1003,
             "name": "Deluxe Queen Room",
             "guests": 5,
             "description": "Suite de lujo perfecta para grupos más grandes. Espacio premium con comodidad y estilo mejorados.",
@@ -179,7 +183,7 @@
     "paymentSchedule": "Calendario de Pagos",
     "planFeatures": "Características del Plan",
     "installment": "cuota",
-    "managePlan": "Administrar Plan",
+    "managePlan": "Siguiente Pago",
     "active": "Activo",
     "noDetails": "Detalles del plan no disponibles.",
     "startPlan": "¿Listo para Comenzar?",
@@ -208,5 +212,8 @@
     "selected": "Seleccionado",
     "payment1": "Pago",
     "payments": "Pagos",
-    "onetime": "único"
+    "onetime": "único",
+    "left": "Faltan",
+    "soldOut": "Agotado",
+    "ends": "Termina"
 }

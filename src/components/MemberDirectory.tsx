@@ -10,6 +10,7 @@ import { useTranslation } from "@/utils/useTranslation";
 import ShowcasePlans from './ShowcasePlans';
 import Accommodations from './Accommodations';
 import SponsorsComponent from './Sponsors';
+import { Instagram } from 'lucide-react';
 
 if (typeof document !== 'undefined' && !document.getElementById('google-font-poppins')) {
   const link = document.createElement('link');
@@ -345,26 +346,17 @@ const MemberDirectory: React.FC = () => {
               <p className="text-sm mb-4" style={{ color: `${palette.white}C0` }}>
                 {t("getUpdatesDesc")}
               </p>
-              <form onSubmit={handleSubscribe} className="flex">
-                <input
-                  type="email"
-                  placeholder={t("enterEmail")}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 px-3 py-2 text-sm rounded-l-lg border-0 outline-none placeholder-gray-300"
-                  style={{ backgroundColor: `${palette.white}20`, color: palette.white }}
-                />
-                <button 
-                  type="submit"
-                  disabled={!isValidEmail(email)}
-                  className={`px-4 py-2 text-sm font-semibold rounded-r-lg transition-colors duration-200 ${
-                    isValidEmail(email) ? 'cursor-pointer hover:opacity-90' : 'cursor-not-allowed opacity-50'
-                  }`}
-                  style={{ backgroundColor: palette.primary, color: palette.white }}
-                >
-                  {t("subscribe")}
-                </button>
-              </form>
+              <a
+                href="https://www.instagram.com/laconfertc"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-medium hover:underline"
+                style={{ color: palette.white }}
+              >
+                <Instagram size={18} />
+                @laconfertc
+              </a>
+             
             </div>
           </div>
         </div>

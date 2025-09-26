@@ -14,14 +14,12 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   const { locale } = await params; // Await the params
 
   return (
-    <html lang={locale}>
-      <body>
-        <main>
-          {/* <SessionWrapper>{children}</SessionWrapper> */}
-          {children}
-          <div id="modal-root"></div>
-        </main>
-      </body>
-    </html>
+
+    <main lang={locale}>
+      {/* <SessionWrapper>{children}</SessionWrapper> */}
+      {children}
+      <div id="modal-root"></div>
+    </main>
+
   );
 }

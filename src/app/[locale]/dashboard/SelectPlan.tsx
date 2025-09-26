@@ -17,6 +17,7 @@ interface Plan {
   savings: string | null;
   popular: boolean;
   features: string[];
+  cutoff: string;
 }
 
 interface AccommodationRoom {
@@ -57,6 +58,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
     hasSelectedPlan: sessionData?.hasSelectedPlan ?? false,
     selectedPlan: sessionData?.selectedPlan ?? "",
   });
+  const [availabilityMap, setAvailabilityMap] = useState<Record<number, number>>({});
 
   const { t } = useTranslation();
   const plans: Plan[] = t("plans") as unknown as Plan[];
@@ -94,9 +96,9 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
       if (room && room.extraFees) {
         amount += 100; // fixed room extra fee
       }
-  }
+    }
 
-  return amount;
+    return amount;
   };
 
   // Apply promo code button handler
@@ -168,6 +170,34 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
     }
   };
 
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/rooms`);
+        const data = await res.json();
+
+        if (data.success) {
+          const map: Record<number, number> = {};
+          data.data.forEach((room: { id: number; available: number }) => {
+            map[room.id] = room.available;
+          });
+          setAvailabilityMap(map);
+        }
+      } catch (err) {
+        console.error("Error fetching room availability:", err);
+      }
+    };
+
+    fetchAvailability();
+  }, []);
+
+  const isCutoffPast = (cutoff?: string) => {
+    if (!cutoff) return false;
+    const today = new Date();
+    const cutoffDate = new Date(cutoff);
+    return cutoffDate < today; // true if already expired
+  };
+
   return (
     <div 
       className="min-h-screen p-6"
@@ -205,9 +235,10 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className={`relative rounded-xl border transition-all duration-300 hover:scale-105 ${
-                selectedPlan === plan.id ? 'ring-4' : 'hover:shadow-lg'
-              }`}
+              className={`relative rounded-xl border transition-all duration-300 hover:scale-105 
+                ${isCutoffPast(plan.cutoff) ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'} 
+                ${selectedPlan === plan.id ? 'ring-4' : !isCutoffPast(plan.cutoff) ? 'hover:shadow-lg' : ''}
+              `}
               style={{
                 backgroundColor: palette.cardBg,
                 borderColor: selectedPlan === plan.id ? palette.primary : palette.cardBorder,
@@ -215,7 +246,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
                   ? `0 0 0 3px ${palette.primary}20, ${palette.cardShadow}` 
                   : palette.cardShadow,
               }}
-              onClick={() => handlePlanSelect(plan.id)}
+              onClick={!isCutoffPast(plan.cutoff) ? () => handlePlanSelect(plan.id) : undefined}
             >
               {/* Savings Badge */}
               {plan.savings && !plan.popular && (
@@ -279,7 +310,9 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
             {t('conferenceAccommodations')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {rooms.map((room) => (
+            {rooms
+              .filter((room) => (availabilityMap[room.id] ?? 0) > 0)
+              .map((room) => (
               <div
                 key={room.id}
                 className={`relative rounded-2xl border-2 transition-all duration-300 hover:scale-105 cursor-pointer ${
@@ -294,6 +327,20 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
                 }}
                 onClick={() => setSelectedRoom(room.id)}
               >
+                {availabilityMap[room.id] == 0 && (
+                  <div className="absolute top-4 right-4 z-10">
+                    <div className="px-3 py-1 rounded-full text-sm font-bold shadow-md bg-red-600 text-white">
+                      {t("soldOut")}
+                    </div>
+                  </div>
+                )}
+                {availabilityMap[room.id] != null && availabilityMap[room.id] > 0 && availabilityMap[room.id] < 5 && (
+                  <div className="absolute top-4 right-4 z-10">
+                    <div className="px-3 py-1 rounded-full text-sm font-semibold shadow-md bg-yellow-500 text-white">
+                      {availabilityMap[room.id]} {t("left")}
+                    </div>
+                  </div>
+                )}
                 <img
                   src={`/${room.image}`}
                   alt={room.name}
@@ -303,9 +350,6 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
                   <h3 className="text-lg font-bold mb-1" style={{ color: palette.text }}>
                     {room.name} {room.extraFees ? `(+ $100 USD)` : ""}
                   </h3>
-                  <p className="text-sm mb-2" style={{ color: palette.textSecondary }}>
-                    {room.description}
-                  </p>
                   <div className="flex items-center space-x-1 px-3 py-1 rounded-full"
                                          style={{ backgroundColor: palette.hobbyBg }}>
                     <Users size={14} style={{ color: palette.primary }} />

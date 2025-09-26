@@ -49,6 +49,7 @@ export const authOptions: NextAuthOptions = {
         token.clubName = user.clubName ?? null;
         token.hasSelectedPlan = user.hasSelectedPlan ?? null;
         token.selectedPlan = user.selectedPlan ?? null;
+        token.room = user.room ?? null;
       }
       return token;
     },
@@ -62,6 +63,7 @@ export const authOptions: NextAuthOptions = {
         clubName: token.clubName as string | null,
         hasSelectedPlan: token.hasSelectedPlan as boolean | null,
         selectedPlan: token.selectedPlan as string | null,
+        room: token.room as string | null,
       };
       return session;
     },

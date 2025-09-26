@@ -12,6 +12,7 @@ declare module "next-auth" {
       clubName?: string | null;
       hasSelectedPlan?: boolean | null;
       selectedPlan?: string | null;
+      room: string | null;
     };
   }
 
@@ -23,5 +24,6 @@ declare module "next-auth" {
     clubName?: string | null;
     hasSelectedPlan?: boolean | null;
     selectedPlan?: string | null;
+    room?: string | null;
   }
 }

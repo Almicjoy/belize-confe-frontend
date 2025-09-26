@@ -268,7 +268,7 @@ export default function LoginPage({
             <p style={{ color: palette.textSecondary }}>
                 {t('noAccount')}{' '}
                 <Link
-                href="/register"
+                href={`/${locale}/register`}
                 className="font-semibold hover:underline transition-colors duration-200"
                 style={{ color: palette.primary }}
                 >

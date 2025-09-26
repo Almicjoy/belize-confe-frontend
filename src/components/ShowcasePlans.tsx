@@ -15,6 +15,7 @@ interface Plan {
   savings: string | null;
   popular: boolean;
   features: string[];
+  cutoff: string;
 }
 
 interface ShowcasePlansProps {
@@ -28,6 +29,21 @@ const ShowcasePlans: React.FC<ShowcasePlansProps> = ({ locale = "en" }) => {
 
   const handleSelectPlan = (planId: number) => {
     router.push(`/${locale}/register?planId=${planId}`);
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const isCutoffPast = (cutoff: string) => {
+    const today = new Date();
+    const cutoffDate = new Date(cutoff);
+    return cutoffDate < today; // true if already expired
   };
 
   return (
@@ -53,34 +69,35 @@ const ShowcasePlans: React.FC<ShowcasePlansProps> = ({ locale = "en" }) => {
             <div
               key={plan.id}
               className={`relative rounded-3xl p-8 transition-all duration-500 hover:scale-105 group ${
-                plan.popular ? 'ring-2 ring-offset-4' : ''
+                plan.cutoff ? 'ring-2 ring-offset-4' : ''
               }`}
               style={{
                 backgroundColor: palette.cardBg,
-                boxShadow: plan.popular 
+                boxShadow: plan.cutoff 
                   ? `0 25px 50px -12px rgba(60, 196, 255, 0.25)` 
                   : palette.cardShadow,
-                borderColor: plan.popular ? palette.primary : palette.cardBorder,
-                transform: plan.popular ? 'translateY(-8px)' : 'translateY(0)'
+                borderColor: plan.cutoff ? palette.primary : palette.cardBorder,
+                transform: plan.cutoff ? 'translateY(-8px)' : 'translateY(0)'
               }}
             >
-              {/* Popular Badge */}
-              {plan.popular && (
+              {/* Cutoff Badge */}
+              {/* {plan.cutoff && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <div
-                    className="flex items-center space-x-1 px-4 py-2 rounded-full text-sm font-bold shadow-lg"
+                    className="flex items-center justify-center space-x-2 px-6 py-2 rounded-full text-sm font-bold shadow-lg"
                     style={{
+                      minWidth: "200px", // 👈 ensures badge has more width
                       background: `linear-gradient(135deg, ${palette.primary}, ${palette.secondary})`,
-                      color: palette.white
+                      color: palette.white,
                     }}
                   >
                     <Star size={14} fill="currentColor" />
-                    <span>Most Popular</span>
+                    <span>Ends: {formatDate(plan.cutoff)}</span>
                   </div>
                 </div>
-              )}
+              )} */}
 
-              {/* Savings Badge */}
+              {/* Savings Badge
               {plan.savings && !plan.popular && (
                 <div className="absolute -top-3 -right-3">
                   <div
@@ -94,7 +111,7 @@ const ShowcasePlans: React.FC<ShowcasePlansProps> = ({ locale = "en" }) => {
                     <span>{plan.savings}</span>
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* Plan Header */}
               <div className="text-center mb-6">
@@ -136,6 +153,15 @@ const ShowcasePlans: React.FC<ShowcasePlansProps> = ({ locale = "en" }) => {
                     {plan.installments}
                   </span>
                 </div>
+                <div className="flex justify-between items-center p-3 rounded-xl" 
+                     style={{ backgroundColor: palette.hobbyBg }}>
+                  <span className="text-sm font-medium" style={{ color: palette.text }}>
+                    {t("ends")}
+                  </span>
+                  <span className="font-bold" style={{ color: palette.primary }}>
+                    {formatDate(plan.cutoff)}
+                  </span>
+                </div>
               </div>
 
               {/* Features */}
@@ -156,9 +182,11 @@ const ShowcasePlans: React.FC<ShowcasePlansProps> = ({ locale = "en" }) => {
               {/* Select Button */}
               <button
                 onClick={() => handleSelectPlan(plan.id)}
-                className={`w-full py-4 px-6 rounded-2xl font-semibold text-center transition-all duration-300 group-hover:scale-105 shadow-lg hover:shadow-xl ${
-                  plan.popular ? 'transform hover:scale-110' : ''
-                }`}
+                disabled={Boolean(plan.cutoff && isCutoffPast(plan.cutoff))}
+                className={`w-full py-4 px-6 rounded-2xl font-semibold text-center transition-all duration-300 shadow-lg 
+                  ${plan.popular ? 'transform hover:scale-110' : ''} 
+                  ${plan.cutoff && isCutoffPast(plan.cutoff) ? 'opacity-50 cursor-not-allowed' : 'group-hover:scale-105 hover:shadow-xl'}
+                `}
                 style={{
                   background: plan.popular
                     ? `linear-gradient(135deg, ${palette.primary}, ${palette.secondary})`

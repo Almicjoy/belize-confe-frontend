@@ -394,7 +394,7 @@ export default function RegisterPage({
               <p className="text-gray-600">
                 {t('haveAccount')}{' '}
                 <a 
-                  href="#" 
+                  href={`/${locale}/login`} 
                   className="font-semibold hover:underline transition-colors duration-200 text-blue-400"
                 >
                   {t('signIn')}
