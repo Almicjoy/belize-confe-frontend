@@ -24,10 +24,10 @@ export const authOptions: NextAuthOptions = {
             }
           );
 
-          if (!res.ok) return null; // invalid credentials
+          if (!res.ok) return null;
 
           const user = await res.json();
-          return user; // must return an object with at least an `id`
+          return user; 
         } catch (err) {
           console.error("Authorize error:", err);
           return null;
@@ -37,6 +37,10 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 30 * 60, // ⏳ 30 minutes in seconds
+  },
+  jwt: {
+    maxAge: 30 * 60, // ⏳ 30 minutes in seconds
   },
   callbacks: {
     async jwt({ token, user }) {

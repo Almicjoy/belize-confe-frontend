@@ -32,10 +32,11 @@ const ShowcasePlans: React.FC<ShowcasePlansProps> = ({ locale = "en" }) => {
   };
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const [year, month, day] = dateString.split("-").map(Number);
+    const date = new Date(year, month - 1, day); // months are 0-based
     return date.toLocaleDateString("en-US", {
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
     });
   };
@@ -80,54 +81,12 @@ const ShowcasePlans: React.FC<ShowcasePlansProps> = ({ locale = "en" }) => {
                 transform: plan.cutoff ? 'translateY(-8px)' : 'translateY(0)'
               }}
             >
-              {/* Cutoff Badge */}
-              {/* {plan.cutoff && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <div
-                    className="flex items-center justify-center space-x-2 px-6 py-2 rounded-full text-sm font-bold shadow-lg"
-                    style={{
-                      minWidth: "200px", // 👈 ensures badge has more width
-                      background: `linear-gradient(135deg, ${palette.primary}, ${palette.secondary})`,
-                      color: palette.white,
-                    }}
-                  >
-                    <Star size={14} fill="currentColor" />
-                    <span>Ends: {formatDate(plan.cutoff)}</span>
-                  </div>
-                </div>
-              )} */}
-
-              {/* Savings Badge
-              {plan.savings && !plan.popular && (
-                <div className="absolute -top-3 -right-3">
-                  <div
-                    className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-semibold shadow-md"
-                    style={{
-                      backgroundColor: palette.success,
-                      color: palette.white
-                    }}
-                  >
-                    <Sparkles size={12} />
-                    <span>{plan.savings}</span>
-                  </div>
-                </div>
-              )} */}
 
               {/* Plan Header */}
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold mb-2" style={{ color: palette.text }}>
                   {t("plan")} {plan.id}
                 </h3>
-                <div className="mb-4">
-                  <span className="text-4xl font-bold" style={{ color: palette.primary }}>
-                    ${plan.paymentAmount}
-                  </span>
-                  {plan.installments > 1 && (
-                    <span className="text-lg ml-1" style={{ color: palette.textSecondary }}>
-                      {t("perPayment")}
-                    </span>
-                  )}
-                </div>
                 <p className="text-sm font-medium" style={{ color: palette.textSecondary }}>
                   {plan.paymentSchedule}
                 </p>
@@ -135,15 +94,6 @@ const ShowcasePlans: React.FC<ShowcasePlansProps> = ({ locale = "en" }) => {
 
               {/* Plan Details */}
               <div className="space-y-4 mb-8">
-                <div className="flex justify-between items-center p-3 rounded-xl" 
-                     style={{ backgroundColor: palette.hobbyBg }}>
-                  <span className="text-sm font-medium" style={{ color: palette.text }}>
-                    {t("totalAmount")}
-                  </span>
-                  <span className="font-bold" style={{ color: palette.primary }}>
-                    ${plan.totalAmount}
-                  </span>
-                </div>
                 <div className="flex justify-between items-center p-3 rounded-xl" 
                      style={{ backgroundColor: palette.hobbyBg }}>
                   <span className="text-sm font-medium" style={{ color: palette.text }}>

@@ -57,7 +57,7 @@ export default function LoginPage({
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: palette.background }}>
+    <div className="min-h-screen relative overflow-hidden mt-20" style={{ background: palette.background }}>
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div 
@@ -221,7 +221,7 @@ export default function LoginPage({
               </div>
 
               {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <label className="flex items-center space-x-2 cursor-pointer">
                   <input 
                     type="checkbox" 
@@ -239,7 +239,7 @@ export default function LoginPage({
                 >
                   {t('forgotPassword')}
                 </a>
-              </div>
+              </div> */}
 
               {/* Login Button */}
               <button

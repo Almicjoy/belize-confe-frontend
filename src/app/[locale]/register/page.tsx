@@ -89,7 +89,7 @@ export default function RegisterPage({
   
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-white">
+    <div className="min-h-screen relative overflow-hidden bg-white mt-20">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div 

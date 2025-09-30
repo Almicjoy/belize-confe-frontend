@@ -36,10 +36,11 @@ interface MakePaymentProps {
   };
   plan: Plan;
   room: string | null;
+  price: number;
   onClose: () => void;
 }
 
-const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress, plan, room, onClose}) => {
+const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress, plan, room, price, onClose}) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentComplete, setPaymentComplete] = useState(false);
@@ -50,6 +51,7 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
   // In your actual implementation, this would come from props or context
 
   const handleClose = () => {
+    console.log(room)
     setIsVisible(false);
     setIsProcessing(false);
     setPaymentComplete(false);
@@ -68,7 +70,7 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
     try {
      console.log(sessionData)
       const payload = {
-        amount: plan.paymentAmount * 100, // cents
+        amount: (price/plan.installments) * 100 * 2, // cents
         description: `Belize 2026 Conference Registration - Payment ${paymentProgress.completed + 1}`,
         returnUrl: process.env.NEXT_PUBLIC_RETURN_URL || "",
         orderNumber: uuidv4(),
@@ -138,10 +140,10 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
               className="text-xl font-semibold mb-2"
               style={{ color: palette.text }}
             >
-              Payment Successful!
+              {t('paymentSuccess')}
             </h3>
             <p style={{ color: palette.textSecondary }}>
-              Your payment of ${plan.paymentAmount.toFixed(2)} has been processed.
+              {t('paymentOf')} ${plan.paymentAmount.toFixed(2)} {t('beenProcessed')}
             </p>
           </div>
         ) : (
@@ -157,7 +159,7 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
                 className="text-xl font-semibold"
                 style={{ color: palette.text }}
               >
-                Confirm Payment
+                {t('confirmPayment')}
               </h3>
             </div>
 
@@ -172,13 +174,13 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
                     className="font-medium"
                     style={{ color: palette.text }}
                   >
-                    {plan.paymentSchedule} Payment
+                    {plan.paymentSchedule} {t('payment')}
                   </h4>
                   <p 
                     className="text-sm"
                     style={{ color: palette.textSecondary }}
                   >
-                    {plan.installments} installment plan
+                    {plan.installments} {t('installmentPlan')}
                   </p>
                 </div>
                 {plan.popular && (
@@ -206,13 +208,13 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
               <div className="border-t pt-3" style={{ borderColor: palette.cardBorder }}>
                 <div className="flex justify-between items-center">
                   <span style={{ color: palette.textSecondary }}>
-                    Payment Amount:
+                    {t('paymentAmount')}:
                   </span>
                   <span 
                     className="text-2xl font-bold"
                     style={{ color: palette.primary }}
                   >
-                    ${plan.paymentAmount.toFixed(2)}
+                    ${Number(price/plan.installments).toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -230,7 +232,7 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
                 }}
                 disabled={isProcessing}
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 onClick={() => {
@@ -246,10 +248,10 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
                 {isProcessing ? (
                   <div className="flex items-center justify-center">
                     <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
-                    Processing...
+                    {t('processing')}
                   </div>
                 ) : (
-                  `Pay $${plan.paymentAmount.toFixed(2)}`
+                  `${t('pay')} $${Number(price/plan.installments).toFixed(2)}`
                 )}
               </button>
             </div>

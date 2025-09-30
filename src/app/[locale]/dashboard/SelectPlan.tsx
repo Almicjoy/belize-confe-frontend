@@ -59,6 +59,8 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
     selectedPlan: sessionData?.selectedPlan ?? "",
   });
   const [availabilityMap, setAvailabilityMap] = useState<Record<number, number>>({});
+  const [roomPrice, setRoomPrice] = useState<Record<number, number>>({});
+  const [selectedRoomPrice, setSelectedRoomPrice] = useState<number | null>(null);
 
   const { t } = useTranslation();
   const plans: Plan[] = t("plans") as unknown as Plan[];
@@ -66,6 +68,12 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
 
   const handlePlanSelect = (planId: number) => {
     setSelectedPlan(planId);
+  };
+
+  const handleSelectRoom = (roomId: number) => {
+    if (availabilityMap[roomId] == 0) return; 
+    setSelectedRoom(roomId);
+    setSelectedRoomPrice(roomPrice[roomId] ?? null); // store price when selecting
   };
 
   const getValidPromo = (code: string) => {
@@ -80,21 +88,13 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
 
   // Calculate discounted amount based on the promo
   const calculateFinalAmount = (plan: Plan, isFirstPayment: boolean) => {
-    let amount = plan.paymentAmount;
+    let amount = (Number(selectedRoomPrice) / plan.installments);
 
     // Apply promo code discount only on the first payment
     if (isFirstPayment && promoApplied && promoCode.trim()) {
       const promo = getValidPromo(promoCode);
       if (promo) {
         amount = Math.max(amount - promo.discountAmount, 0);
-      }
-    }
-
-    // Add room extra fee only to the first payment
-    if (isFirstPayment && selectedRoom) {
-      const room = rooms.find(r => r.id === selectedRoom);
-      if (room && room.extraFees) {
-        amount += 100; // fixed room extra fee
       }
     }
 
@@ -133,7 +133,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
       const discountedAmount = calculateFinalAmount(plan, true);
 
       const payload = {
-        amount: Math.round(discountedAmount * 100), // cents
+        amount: Math.round(discountedAmount * 100) * 2, // cents
         description: `Belize 2026 Conference Registration - Payment 1`,
         returnUrl: process.env.NEXT_PUBLIC_RETURN_URL || "",
         orderNumber: uuidv4(),
@@ -177,11 +177,16 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
         const data = await res.json();
 
         if (data.success) {
-          const map: Record<number, number> = {};
+          const mapAvailable: Record<number, number> = {};
+          const mapPrice: Record<number, number> = {};
           data.data.forEach((room: { id: number; available: number }) => {
-            map[room.id] = room.available;
+            mapAvailable[room.id] = room.available;
           });
-          setAvailabilityMap(map);
+          data.data.forEach((room: { id: number; price: number }) => {
+            mapPrice[room.id] = room.price;
+          });
+          setAvailabilityMap(mapAvailable);
+          setRoomPrice(mapPrice);
         }
       } catch (err) {
         console.error("Error fetching room availability:", err);
@@ -205,6 +210,94 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
     >
       <div className="max-w-6xl mx-auto">
         {/* Header */}
+
+        {/* Room Selection */}
+        <div className="mb-6">
+          <h2 className="text-xl font-bold mb-4 text-center" style={{ color: palette.text }}>
+            {t('conferenceAccommodations')}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {rooms.map((room) => {
+              const isSoldOut = (availabilityMap[room.id] == 0);
+              const isLowAvailability = availabilityMap[room.id] != null && availabilityMap[room.id] > 0 && availabilityMap[room.id] < 5;
+
+              return (
+                <div
+                  key={room.id}
+                  className={`relative rounded-2xl border-2 transition-all duration-300 ${
+                    isSoldOut ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 cursor-pointer hover:shadow-lg'
+                  } ${selectedRoom === room.id ? 'ring-4' : ''}`}
+                  style={{
+                    borderColor: selectedRoom === room.id ? palette.primary : palette.cardBorder,
+                    backgroundColor: palette.cardBg,
+                    boxShadow: selectedRoom === room.id
+                      ? `0 0 0 4px ${palette.primary}20, ${palette.cardShadow}`
+                      : palette.cardShadow,
+                  }}
+                  onClick={() => !isSoldOut && handleSelectRoom(room.id)}
+                >
+                  {isSoldOut && (
+                    <div className="absolute top-4 right-4 z-10">
+                      <div className="px-3 py-1 rounded-full text-sm font-bold shadow-md bg-red-600 text-white">
+                        {t("soldOut")}
+                      </div>
+                    </div>
+                  )}
+
+                  {isLowAvailability && (
+                    <div className="absolute top-4 right-4 z-10">
+                      <div className="px-3 py-1 rounded-full text-sm font-semibold shadow-md bg-yellow-500 text-white">
+                        {availabilityMap[room.id]} {t("left")}
+                      </div>
+                    </div>
+                  )}
+
+                  <img
+                    src={`/${room.image}`}
+                    alt={room.name}
+                    className="rounded-t-2xl w-full h-48 object-cover"
+                  />
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold mb-1" style={{ color: palette.text }}>
+                      {room.name}
+                    </h3>
+                    <div className="text-2xl font-bold mb-1" style={{ color: palette.primary }}>
+                      ${Number(roomPrice[room.id]).toFixed(2)}
+                    </div>
+                    <div className="flex items-center space-x-1 px-3 py-1 rounded-full"
+                        style={{ backgroundColor: palette.hobbyBg }}>
+                      <Users size={14} style={{ color: palette.primary }} />
+                      <span className="text-sm font-semibold" style={{ color: palette.hobbyText }}>
+                        {room.guests} {t('guests')}
+                      </span>
+                    </div>
+                    <ul className="text-sm space-y-1" style={{ color: palette.textLight }}>
+                      {room.amenities.map((feat, i) => (
+                        <li key={i} className="flex items-center gap-1">
+                          <Check className="w-4 h-4" style={{ color: palette.success }} />
+                          {feat}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {selectedRoom === room.id && (
+                    <div className="absolute top-4 right-4">
+                      <div
+                        className="w-6 h-6 rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: palette.primary }}
+                      >
+                        <Check className="w-4 h-4 text-white" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+
         <div className="text-center mb-12">
           <h1 
             className="text-xl font-bold mb-4"
@@ -218,16 +311,6 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
           >
             {t('selectPaymentPlanDesc')}
           </p>
-          <div 
-            className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full"
-            style={{ 
-              backgroundColor: palette.hobbyBg,
-              color: palette.hobbyText 
-            }}
-          >
-            <DollarSign className="w-5 h-5" />
-            <span className="font-medium">{t('totalValue')}</span>
-          </div>
         </div>
 
         {/* Plans Grid */}
@@ -268,7 +351,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
                     {plan.installments} {plan.installments === 1 ? t('payment1') : t('payments')}
                   </h3>
                   <div className="text-2xl font-bold mb-1" style={{ color: palette.primary }}>
-                    ${plan.paymentAmount.toFixed(2)}
+                    ${(Number(selectedRoomPrice) / plan.installments).toFixed(2)}
                   </div>
                   <p className="text-xs" style={{ color: palette.textLight }}>
                     {plan.installments > 1 ? t('perPayment') : t('onetime')}
@@ -279,16 +362,6 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
                 <p className="text-center text-xs rounded-lg p-2 mb-4" style={{ color: palette.textSecondary, backgroundColor: palette.hobbyBg }}>
                   {plan.paymentSchedule}
                 </p>
-
-                {/* Features */}
-                <ul className="space-y-1 mb-4">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center text-xs">
-                      <Check className="w-3 h-3 mr-1 flex-shrink-0" style={{ color: palette.success }} />
-                      <span style={{ color: palette.textSecondary }}>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
 
                 {/* Selection Indicator */}
                 {selectedPlan === plan.id && (
@@ -303,83 +376,11 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
           ))}
         </div>
 
-
-        {/* Room Selection */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold mb-4 text-center" style={{ color: palette.text }}>
-            {t('conferenceAccommodations')}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {rooms
-              .filter((room) => (availabilityMap[room.id] ?? 0) > 0)
-              .map((room) => (
-              <div
-                key={room.id}
-                className={`relative rounded-2xl border-2 transition-all duration-300 hover:scale-105 cursor-pointer ${
-                  selectedRoom === room.id ? 'ring-4' : 'hover:shadow-lg'
-                }`}
-                style={{
-                  borderColor: selectedRoom === room.id ? palette.primary : palette.cardBorder,
-                  backgroundColor: palette.cardBg,
-                  boxShadow: selectedRoom === room.id 
-                    ? `0 0 0 4px ${palette.primary}20, ${palette.cardShadow}` 
-                    : palette.cardShadow,
-                }}
-                onClick={() => setSelectedRoom(room.id)}
-              >
-                {availabilityMap[room.id] == 0 && (
-                  <div className="absolute top-4 right-4 z-10">
-                    <div className="px-3 py-1 rounded-full text-sm font-bold shadow-md bg-red-600 text-white">
-                      {t("soldOut")}
-                    </div>
-                  </div>
-                )}
-                {availabilityMap[room.id] != null && availabilityMap[room.id] > 0 && availabilityMap[room.id] < 5 && (
-                  <div className="absolute top-4 right-4 z-10">
-                    <div className="px-3 py-1 rounded-full text-sm font-semibold shadow-md bg-yellow-500 text-white">
-                      {availabilityMap[room.id]} {t("left")}
-                    </div>
-                  </div>
-                )}
-                <img
-                  src={`/${room.image}`}
-                  alt={room.name}
-                  className="rounded-t-2xl w-full h-48 object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-lg font-bold mb-1" style={{ color: palette.text }}>
-                    {room.name} {room.extraFees ? `(+ $100 USD)` : ""}
-                  </h3>
-                  <div className="flex items-center space-x-1 px-3 py-1 rounded-full"
-                                         style={{ backgroundColor: palette.hobbyBg }}>
-                    <Users size={14} style={{ color: palette.primary }} />
-                    <span className="text-sm font-semibold" style={{ color: palette.hobbyText }}>
-                      {room.guests} {t('guests')}
-                    </span>
-                  </div>
-                  <ul className="text-sm space-y-1" style={{ color: palette.textLight }}>
-                    {room.features.map((feat, i) => (
-                      <li key={i} className="flex items-center gap-1">
-                        <Check className="w-4 h-4" style={{ color: palette.success }} />
-                        {feat}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {selectedRoom === room.id && (
-                  <div className="absolute top-4 right-4">
-                    <div
-                      className="w-6 h-6 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: palette.primary }}
-                    >
-                      <Check className="w-4 h-4 text-white" />
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+        {/* Pricing Note */}
+        <div className="text-center mb-8">
+          <p className="text-sm italic" style={{ color: palette.textSecondary }}>
+            {t('exchangeRate')}
+          </p>
         </div>
 
         {/* Purchase Section */}
@@ -452,15 +453,10 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
               const plan = plans.find(p => p.id === selectedPlan);
               if (!plan) return null;
 
-              const baseAmount = plan.paymentAmount;
+              const baseAmount = (Number(selectedRoomPrice) / plan.installments);
               const promoDiscount = promoApplied && getValidPromo(promoCode) ? getValidPromo(promoCode)!.discountAmount : 0;
-              const roomFee = selectedRoom 
-                ? rooms.find(r => r.id === selectedRoom && r.extraFees) 
-                  ? 100 
-                  : 0 
-                : 0;
 
-              const firstPayment = Math.max(baseAmount - promoDiscount, 0) + roomFee;
+              const firstPayment = Math.max(baseAmount - promoDiscount, 0);
               const remainingPayments = plan.installments > 1 ? baseAmount * (plan.installments - 1) : 0;
               const totalCharge = firstPayment + remainingPayments;
 
@@ -476,33 +472,27 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
               >
                 <ul className="space-y-2 text-sm mb-6" style={{ color: palette.textSecondary }}>
                   <li className="flex justify-between">
-                    <span>Base Payment:</span>
+                    <span>{t('basePayment')}:</span>
                     <span>${baseAmount.toFixed(2)}</span>
                   </li>
                   {promoDiscount > 0 && (
                     <li className="flex justify-between text-green-600">
-                      <span>Promo Discount [ only applied to first payment ]:</span>
+                      <span>{t('promoDiscount')}:</span>
                       <span>- ${promoDiscount.toFixed(2)}</span>
                     </li>
                   )}
-                  {roomFee > 0 && (
-                    <li className="flex justify-between text-blue-600">
-                      <span>Room Extra Fee [ only charged to first payment ]:</span>
-                      <span>+ ${roomFee.toFixed(2)}</span>
-                    </li>
-                  )}
                   <li className="flex justify-between font-medium mt-2 border-t pt-2">
-                    <span>First Payment Total:</span>
+                    <span>{t('firstPaymentTotal')}:</span>
                     <span>${firstPayment.toFixed(2)}</span>
                   </li>
                   {remainingPayments > 0 && (
                     <li className="flex justify-between">
-                      <span>Remaining {plan.installments - 1} Payment{plan.installments - 1 > 1 ? "s" : ""}:</span>
+                      <span>{t('remaining')} {plan.installments - 1} {t('payment')}{plan.installments - 1 > 1 ? "s" : ""}:</span>
                       <span>${remainingPayments.toFixed(2)}</span>
                     </li>
                   )}
                   <li className="flex justify-between font-bold mt-2 border-t pt-2 text-lg" style={{ color: palette.primary }}>
-                    <span>Total Charge:</span>
+                    <span>{t('totalCharge')}:</span>
                     <span>${firstPayment.toFixed(2)}</span>
                   </li>
                 </ul>
@@ -512,6 +502,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
 
             {/* Purchase Button */}
             <button
+              disabled={isProcessing}
               onClick={() => {
                 const plan = plans.find(p => p.id === selectedPlan);
                 if (plan) handlePurchase(plan);
@@ -522,15 +513,8 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
               }}
             >
               <CreditCard className="w-6 h-6" />
-              {t('purchaseSelectedPlan')}
+              {isProcessing ? t('loading') : t('purchaseSelectedPlan')}
             </button>
-            
-            <p className="mt-4 text-sm" style={{ color: palette.textLight }}>
-              {(() => {
-                const plan = plans.find(p => p.id === selectedPlan);
-                return plan ? `${t('selected')}: ${plan.installments} ${t('payment')}${plan.installments > 1 ? 's' : ''} ${t('of')} ${plan.paymentAmount.toFixed(2)}` : '';
-              })()}
-            </p>
           </div>
         )}
 

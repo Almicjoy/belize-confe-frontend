@@ -136,21 +136,21 @@ const MemberDirectory: React.FC = () => {
     <>
       <section
         ref={heroRef}
-        className="w-full min-h-screen px-2 py-20 pt-28 relative flex items-center overflow-hidden"
+        className="w-full min-h-screen px-2 py-20 pt-28 relative flex items-center overflow-hidden bg-black"
       >
-        {/* Background Video (iframe) */}
-        <iframe
-          className="absolute top-0 left-0 w-[177.78%] h-full min-w-full min-h-full -translate-x-1/2 left-1/2"
-          src="https://www.youtube.com/embed/7pJ0YCYm8MY?autoplay=1&mute=1&loop=1&playlist=7pJ0YCYm8MY&controls=0&modestbranding=1&showinfo=0&rel=0"
-          title="Landing Video"
-          frameBorder="0"
-          allow="autoplay; encrypted-media"
-          allowFullScreen
-          style={{ pointerEvents: "none" }}
-        ></iframe>
-
-        {/* Optional Overlay to improve text contrast */}
-        <div className="absolute inset-0 bg-black/40" style={{ zIndex: 1 }} />
+        {/* Background Video - only visible on large screens */}
+        <div className="hidden lg:block absolute top-0 left-0 w-full h-full">
+          <iframe
+            className="w-full h-full object-cover"
+            src="https://www.youtube.com/embed/7pJ0YCYm8MY?autoplay=1&mute=1&loop=1&playlist=7pJ0YCYm8MY&controls=0&modestbranding=1&showinfo=0&rel=0"
+            title="Landing Video"
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            style={{ pointerEvents: "none" }}
+          ></iframe>
+          <div className="absolute inset-0 bg-black/40" style={{ zIndex: 1 }} />
+        </div>
 
         {/* Foreground Content */}
         <div className="relative z-10 max-w-7xl mx-auto w-full">
@@ -189,22 +189,35 @@ const MemberDirectory: React.FC = () => {
               </div>
             </div>
 
-            <div className="relative lg:col-span-1">
+            {/* Logo and Mobile Video */}
+            <div className="relative lg:col-span-1 flex flex-col items-center gap-6">
               <Image src="/logo.png" alt="Logo" width={600} height={600} />
+
+              {/* Show video BELOW logo only on small screens */}
+              <div className="w-full block lg:hidden">
+                <iframe
+                  className="w-full h-64 sm:h-80 object-cover"
+                  src="https://www.youtube.com/embed/7pJ0YCYm8MY?autoplay=1&mute=1&loop=1&playlist=7pJ0YCYm8MY&controls=0&modestbranding=1&showinfo=0&rel=0"
+                  title="Landing Video (Mobile)"
+                  frameBorder="0"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                ></iframe>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <main ref={plansRef} className="w-full relative z-10" style={{ backgroundColor: palette.hobbyBg }}>
-        <div className="w-full px-2 py-4">
-            <ShowcasePlans/>
-        </div>
-      </main>
-
       <main ref={accommodationRef} className="w-full relative z-10" style={{ backgroundColor: palette.hobbyBg }}>
         <div className="w-full px-2 py-4">
             <Accommodations/>
+        </div>
+      </main>
+
+      <main ref={plansRef} className="w-full relative z-10" style={{ backgroundColor: palette.hobbyBg }}>
+        <div className="w-full px-2 py-4">
+            <ShowcasePlans/>
         </div>
       </main>
 

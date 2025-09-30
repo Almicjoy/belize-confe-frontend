@@ -101,14 +101,14 @@ const Navbar: React.FC<NavbarProps> = ({
                 textColor={getDesktopTextColor()}
               />
               <MenuButton 
-                text={t("promos")} 
-                onClick={scrollToPlans} 
+                text={t("accommodations")} 
+                onClick={scrollToAccommodations} 
                 palette={palette}
                 textColor={getDesktopTextColor()}
               />
               <MenuButton 
-                text={t("accommodations")} 
-                onClick={scrollToAccommodations} 
+                text={t("promos")} 
+                onClick={scrollToPlans} 
                 palette={palette}
                 textColor={getDesktopTextColor()}
               />
@@ -197,9 +197,9 @@ const Navbar: React.FC<NavbarProps> = ({
                       mobile
                     />
                     <MenuButton
-                      text={t("promos")}
+                      text={t("accommodations")}
                       onClick={() => {
-                        scrollToPlans();
+                        scrollToAccommodations();
                         setIsMobileMenuOpen(false);
                       }}
                       palette={palette}
@@ -207,9 +207,9 @@ const Navbar: React.FC<NavbarProps> = ({
                       mobile
                     />
                     <MenuButton
-                      text={t("accommodations")}
+                      text={t("promos")}
                       onClick={() => {
-                        scrollToAccommodations();
+                        scrollToPlans();
                         setIsMobileMenuOpen(false);
                       }}
                       palette={palette}

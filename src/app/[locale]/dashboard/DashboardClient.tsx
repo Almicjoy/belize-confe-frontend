@@ -39,6 +39,15 @@ interface AccommodationRoom {
   features: string[];
   image: string;
   extraFees?: boolean;
+  price: number;
+}
+
+interface PaymentTrackingProps {
+  selectedPlan: number;
+  paymentProgress: { completed: number; total: number };
+  firstPaymentDate: string; // ISO string or Date object of first payment
+  handleMakeNextPayment: () => void;
+  t: (key: string) => string;
 }
 
 export default function DashboardClient() {
@@ -58,6 +67,9 @@ export default function DashboardClient() {
   const [error, setError] = useState("");
   const [paymentProgress, setPaymentProgress] = useState({ completed: 0, total: 0 });
   const [showNextPayment, setShowNextPayment] = useState(false);
+  const [availabilityMap, setAvailabilityMap] = useState<Record<number, number>>({});
+  const [roomPrice, setRoomPrice] = useState<Record<number, number>>({});
+  const [selectedRoomPrice, setSelectedRoomPrice] = useState<number | null>(null);
 
   const { t } = useTranslation();
   const plans: Plan[] = t("plans") as unknown as Plan[];
@@ -97,6 +109,32 @@ export default function DashboardClient() {
       });
     }
   }, [session]);
+
+    useEffect(() => {
+    const fetchAvailability = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/rooms`);
+        const data = await res.json();
+
+        if (data.success) {
+          const mapAvailable: Record<number, number> = {};
+          const mapPrice: Record<number, number> = {};
+          data.data.forEach((room: { id: number; available: number }) => {
+            mapAvailable[room.id] = room.available;
+          });
+          data.data.forEach((room: { id: number; price: number }) => {
+            mapPrice[room.id] = room.price;
+          });
+          setAvailabilityMap(mapAvailable);
+          setRoomPrice(mapPrice);
+        }
+      } catch (err) {
+        console.error("Error fetching room availability:", err);
+      }
+    };
+
+    fetchAvailability();
+  }, []);
 
   // Process payments data to determine plan status
   useEffect(() => {
@@ -327,9 +365,6 @@ export default function DashboardClient() {
                     <div className="space-y-2">
                       <h4 className="font-medium text-gray-700 text-sm sm:text-base">{t('paymentSchedule')}</h4>
                       <p className="text-sm text-gray-600">{planDetails.paymentSchedule}</p>
-                      <p className="text-sm text-gray-600">
-                        ${planDetails.paymentAmount.toFixed(2)} {t('perPayment')}
-                      </p>
                     </div>
                     <div className="space-y-2">
                       <h4 className="font-medium text-gray-700 text-sm sm:text-base">{t('planFeatures')}</h4>
@@ -382,7 +417,7 @@ export default function DashboardClient() {
                   )}
                   
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm text-gray-600 bg-white px-3 sm:px-4 py-2 rounded-xl border border-green-100">
-                    <span className="font-medium">{t('totalAmount')}: ${planDetails.totalAmount}</span>
+                    <span className="font-medium">{t('totalAmount')}: ${roomPrice[Number(selectedRoom!)]}</span>
                     <span className="text-xs sm:text-sm">{planDetails.installments} {t('installment')}{planDetails.installments > 1 ? 's' : ''}</span>
                   </div>
                   
@@ -413,6 +448,7 @@ export default function DashboardClient() {
                       paymentProgress={paymentProgress}
                       plan={planDetails}
                       room={selectedRoom}
+                      price={roomPrice[Number(selectedRoom!)]}
                       onClose={() => setShowNextPayment(false)}
                   />}
                 </div>

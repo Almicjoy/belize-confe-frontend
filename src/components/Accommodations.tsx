@@ -12,7 +12,6 @@ interface AccommodationRoom {
   guests: number;
   description: string;
   amenities: string[];
-  features: string[];
   image: string;
   extraFees?: boolean;
 }
@@ -22,6 +21,7 @@ const Accommodations: React.FC = () => {
   const accommodationRooms: AccommodationRoom[] = t("room") as unknown as AccommodationRoom[];
 
   const [availabilityMap, setAvailabilityMap] = React.useState<Record<number, number>>({});
+  const [roomPrice, setRoomPrice] = React.useState<Record<number, number>>({});
 
   React.useEffect(() => {
     const fetchAvailability = async () => {
@@ -30,11 +30,16 @@ const Accommodations: React.FC = () => {
         const data = await res.json();
 
         if (data.success) {
-          const map: Record<number, number> = {};
+          const mapAvailable: Record<number, number> = {};
+          const mapPrice: Record<number, number> = {};
           data.data.forEach((room: { id: number; available: number }) => {
-            map[room.id] = room.available;
+            mapAvailable[room.id] = room.available;
           });
-          setAvailabilityMap(map);
+          data.data.forEach((room: { id: number; price: number }) => {
+            mapPrice[room.id] = room.price;
+          });
+          setAvailabilityMap(mapAvailable);
+          setRoomPrice(mapPrice);
         }
       } catch (err) {
         console.error("Error fetching room availability:", err);
@@ -94,9 +99,10 @@ const Accommodations: React.FC = () => {
         </div>
 
         {/* Room Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-6">
           {accommodationRooms.map((room) => {
             const available = availabilityMap[room.id] ?? null;
+            const price = roomPrice[room.id] ?? null;
 
             return (
               <div
@@ -125,22 +131,6 @@ const Accommodations: React.FC = () => {
                   <div className="absolute top-4 right-4 z-10">
                     <div className="px-3 py-1 rounded-full text-sm font-semibold shadow-md bg-yellow-500 text-white">
                       {available} {t("left")}
-                    </div>
-                  </div>
-                )}
-
-                {/* Extra Fee Badge */}
-                {room.extraFees && (
-                  <div className="absolute top-4 left-4 z-10">
-                    <div
-                      className="flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-bold shadow-lg"
-                      style={{
-                        background: `linear-gradient(135deg, ${palette.primary}, ${palette.secondary})`,
-                        color: palette.white
-                      }}
-                    >
-                      <Star size={12} fill="currentColor" />
-                      <span>{t('extraFee')}</span>
                     </div>
                   </div>
                 )}
@@ -178,37 +168,25 @@ const Accommodations: React.FC = () => {
                     {room.description}
                   </p>
 
-                  {/* Amenities */}
+                  {/* Amenities + Price */}
                   <div className="mb-6">
-                    <h4 className="text-sm font-semibold mb-3" style={{ color: palette.text }}>
-                      {t('roomAmenities')}
-                    </h4>
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-semibold" style={{ color: palette.text }}>
+                        {t("roomAmenities")}
+                      </h4>
+                      {price && (
+                        <span className="text-4xl font-bold" style={{ color: palette.primary }}>
+                          ${price.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+
                     <div className="grid grid-cols-1 gap-2">
                       {room.amenities.map((amenity, index) => (
                         <div key={index} className="flex items-center space-x-2">
                           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: palette.primary }} />
                           <span className="text-sm" style={{ color: palette.text }}>
                             {amenity}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Features */}
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold mb-3" style={{ color: palette.text }}>
-                      {t('includedServices')}
-                    </h4>
-                    <div className="grid grid-cols-2 gap-2">
-                      {room.features.map((feature, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <div className="w-4 h-4 rounded-full flex items-center justify-center"
-                               style={{ backgroundColor: palette.success }}>
-                            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: palette.white }} />
-                          </div>
-                          <span className="text-xs" style={{ color: palette.text }}>
-                            {feature}
                           </span>
                         </div>
                       ))}
