@@ -1,10 +1,13 @@
 import fs from "fs/promises";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export async function GET() {
   try {
-    // Use path.join to safely resolve the file
-    const filePath = path.resolve(process.cwd(), "src/lib/data.json");
+    const filePath = path.join(__dirname, "../../../lib/data.json"); // relative from route.ts
     const jsonData = await fs.readFile(filePath, "utf-8");
 
     return new Response(jsonData, {
