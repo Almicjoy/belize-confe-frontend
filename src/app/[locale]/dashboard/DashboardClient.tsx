@@ -42,14 +42,6 @@ interface AccommodationRoom {
   price: number;
 }
 
-interface PaymentTrackingProps {
-  selectedPlan: number;
-  paymentProgress: { completed: number; total: number };
-  firstPaymentDate: string; // ISO string or Date object of first payment
-  handleMakeNextPayment: () => void;
-  t: (key: string) => string;
-}
-
 export default function DashboardClient() {
   const { data: session, status } = useSession();
   const [showPlans, setShowPlans] = useState(false);
@@ -70,6 +62,13 @@ export default function DashboardClient() {
   const [availabilityMap, setAvailabilityMap] = useState<Record<number, number>>({});
   const [roomPrice, setRoomPrice] = useState<Record<number, number>>({});
   const [selectedRoomPrice, setSelectedRoomPrice] = useState<number | null>(null);
+  const [nextPayment, setNextPayment] = useState<null | {
+    nextDueDate: string;
+    installmentNumber: number;
+    totalInstallments: number;
+    remaining: number;
+  }>(null);
+
 
   const { t } = useTranslation();
   const plans: Plan[] = t("plans") as unknown as Plan[];
@@ -110,7 +109,7 @@ export default function DashboardClient() {
     }
   }, [session]);
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchAvailability = async () => {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/rooms`);
@@ -215,6 +214,23 @@ export default function DashboardClient() {
 
     fetchPayments();
   }, [session?.user?.email]);
+
+  useEffect(() => {
+    async function fetchNextPayment() {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/next-due/${session?.user.id}`);
+        if (!res.ok) throw new Error("Failed to fetch next due payment");
+        const data = await res.json();
+        setNextPayment(data);
+      } catch (err) {
+        console.error("Error fetching next payment:", err);
+      }
+    }
+
+    if (session?.user.id) {
+      fetchNextPayment();
+    }
+  }, [session?.user.id]);
 
   const handleSelectPlan = () => setShowPlans(true);
   const handleMakeNextPayment = () => setShowNextPayment(true);
@@ -422,12 +438,28 @@ export default function DashboardClient() {
                   </div>
                   
                   <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                    {paymentProgress.completed === paymentProgress.total 
-                      ? t('fullyPaid')
-                      : `${t('haveActivePlan')} ${paymentProgress.total - paymentProgress.completed} ${t('paymentRemaining')}`
-                    }
+                    {paymentProgress.completed === paymentProgress.total ? (
+                      t('fullyPaid')
+                    ) : (
+                      <>
+                        {t('haveActivePlan')} {paymentProgress.total - paymentProgress.completed} {t('paymentRemaining')}
+                        
+                        {nextPayment && (
+                          <div className="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded-lg shadow-md">
+                            <span className="text-yellow-800 font-bold text-base sm:text-lg">
+                              {t('nextPaymentDue')}:{" "}
+                              {new Date(
+                                  new Date(nextPayment.nextDueDate).setDate(
+                                    new Date(nextPayment.nextDueDate).getDate() + 1
+                                  )
+                                ).toLocaleDateString()}
+                            </span>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </p>
-                  
+
                   <ProgressBar 
                     completed={paymentProgress.completed} 
                     total={paymentProgress.total} 

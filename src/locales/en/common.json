@@ -235,7 +235,11 @@
     "installmentPlan": "installment plan",
     "paymentAmount": "Payment Amount",
     "cancel": "Cancel",
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "pay": "Pay",
+    "registrationSuccess": "Registration Successful! Please log in.",
+    "passwordMatch": "Passwords don't match",
+    "nextPaymentDue": "Next Payment Due"
 
 
 

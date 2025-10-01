@@ -385,7 +385,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
 
         {/* Purchase Section */}
         {selectedPlan && (
-          <div className="text-center max-w-md mx-auto">
+          <div className="text-center max-w-md mx-auto px-4 sm:px-0">
 
             {/* Promo Code Input */}
             <div 
@@ -397,18 +397,18 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
               }}
             >
               <label 
-                className="block text-sm font-medium mb-2"
+                className="block text-base font-medium mb-3"
                 style={{ color: palette.text }}
               >
                 {t('havePromoCode')}
               </label>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="text"
                   value={promoCode}
                   onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                   placeholder={t('enterPromoCode')}
-                  className="flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 transition-colors"
+                  className="flex-1 px-3 py-2 border rounded-lg text-base focus:outline-none focus:ring-2 transition-colors"
                   style={{ 
                     borderColor: palette.cardBorder,
                     color: palette.text,
@@ -426,7 +426,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
                 <button
                   onClick={handleApplyPromo}
                   disabled={!promoCode.trim() || promoApplied}
-                  className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 rounded-lg text-sm sm:text-base font-medium text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ 
                     backgroundColor: promoApplied ? palette.success : palette.primary,
                   }}
@@ -436,7 +436,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
               </div>
               {promoStatus && (
                 <p
-                  className={`text-sm mt-2 flex items-center justify-center gap-1 ${
+                  className={`text-sm mt-3 flex items-center justify-center gap-1 text-center ${
                     promoStatus === "success" ? "text-green-600" : "text-red-600"
                   }`}
                 >
@@ -458,65 +458,75 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
 
               const firstPayment = Math.max(baseAmount - promoDiscount, 0);
               const remainingPayments = plan.installments > 1 ? baseAmount * (plan.installments - 1) : 0;
-              const totalCharge = firstPayment + remainingPayments;
 
               return (
-
-              <div 
-                className="mb-6 p-4 rounded-xl border"
-                style={{ 
-                  backgroundColor: palette.cardBg,
-                  borderColor: palette.cardBorder,
-                  boxShadow: palette.cardShadow
-                }}
-              >
-                <ul className="space-y-2 text-sm mb-6" style={{ color: palette.textSecondary }}>
-                  <li className="flex justify-between">
-                    <span>{t('basePayment')}:</span>
-                    <span>${baseAmount.toFixed(2)}</span>
-                  </li>
-                  {promoDiscount > 0 && (
-                    <li className="flex justify-between text-green-600">
-                      <span>{t('promoDiscount')}:</span>
-                      <span>- ${promoDiscount.toFixed(2)}</span>
-                    </li>
-                  )}
-                  <li className="flex justify-between font-medium mt-2 border-t pt-2">
-                    <span>{t('firstPaymentTotal')}:</span>
-                    <span>${firstPayment.toFixed(2)}</span>
-                  </li>
-                  {remainingPayments > 0 && (
+                <div 
+                  className="mb-6 p-4 rounded-xl border text-left"
+                  style={{ 
+                    backgroundColor: palette.cardBg,
+                    borderColor: palette.cardBorder,
+                    boxShadow: palette.cardShadow
+                  }}
+                >
+                  <ul className="space-y-3 text-sm sm:text-base" style={{ color: palette.textSecondary }}>
                     <li className="flex justify-between">
-                      <span>{t('remaining')} {plan.installments - 1} {t('payment')}{plan.installments - 1 > 1 ? "s" : ""}:</span>
-                      <span>${remainingPayments.toFixed(2)}</span>
+                      <span>{t('basePayment')}:</span>
+                      <span>${baseAmount.toFixed(2)}</span>
                     </li>
-                  )}
-                  <li className="flex justify-between font-bold mt-2 border-t pt-2 text-lg" style={{ color: palette.primary }}>
-                    <span>{t('totalCharge')}:</span>
-                    <span>${firstPayment.toFixed(2)}</span>
-                  </li>
-                </ul>
-              </div>
+                    {promoDiscount > 0 && (
+                      <li className="flex justify-between text-green-600">
+                        <span>{t('promoDiscount')}:</span>
+                        <span>- ${promoDiscount.toFixed(2)}</span>
+                      </li>
+                    )}
+                    <li className="flex justify-between font-medium mt-2 border-t pt-2">
+                      <span>{t('firstPaymentTotal')}:</span>
+                      <span>${firstPayment.toFixed(2)}</span>
+                    </li>
+                    {remainingPayments > 0 && (
+                      <li className="flex justify-between">
+                        <span>{t('remaining')} {plan.installments - 1} {t('payment')}{plan.installments - 1 > 1 ? "s" : ""}:</span>
+                        <span>${remainingPayments.toFixed(2)}</span>
+                      </li>
+                    )}
+                    <li className="flex justify-between font-bold mt-2 border-t pt-2 text-lg sm:text-xl" style={{ color: palette.primary }}>
+                      <span>{t('totalCharge')}:</span>
+                      <span>${firstPayment.toFixed(2)}</span>
+                    </li>
+                  </ul>
+                </div>
               );
             })()}
 
             {/* Purchase Button */}
-            <button
-              disabled={isProcessing}
-              onClick={() => {
-                const plan = plans.find(p => p.id === selectedPlan);
-                if (plan) handlePurchase(plan);
-              }}
-              className="w-full font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3 text-white"
-              style={{ 
-                background: `linear-gradient(135deg, ${palette.primary} 0%, ${palette.tertiary} 100%)`,
-              }}
-            >
-              <CreditCard className="w-6 h-6" />
-              {isProcessing ? t('loading') : t('purchaseSelectedPlan')}
-            </button>
+              <button
+                disabled={isProcessing}
+                onClick={() => {
+                  const plan = plans.find(p => p.id === selectedPlan);
+                  if (plan) handlePurchase(plan);
+                }}
+                className="
+                  w-full 
+                  font-bold 
+                  py-3 sm:py-4   /* slightly less tall on mobile */
+                  px-6 sm:px-8   /* reduce padding for smaller screens */
+                  rounded-lg sm:rounded-xl /* softer radius on mobile */
+                  shadow-md hover:shadow-lg /* lighter shadows for mobile */
+                  transition-all duration-300 
+                  flex items-center justify-center gap-2 sm:gap-3 
+                  text-white 
+                  text-sm sm:text-lg   /* scale font */
+                "
+                style={{ 
+                  background: `linear-gradient(135deg, ${palette.primary} 0%, ${palette.tertiary} 100%)`,
+                }}
+              >
+                <CreditCard className="w-4 h-4 sm:w-6 sm:h-6" />
+                {isProcessing ? t('loading') : t('purchaseSelectedPlan')}
+              </button>
           </div>
         )}
+
 
 
         {!selectedPlan && (

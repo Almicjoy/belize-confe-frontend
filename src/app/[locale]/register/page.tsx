@@ -54,7 +54,7 @@ export default function RegisterPage({
 
     // Password validation
     if (password !== confirmPassword) {
-      setMessage("Passwords don't match");
+      setMessage(t('passwordMatch'));
       setIsLoading(false);
       return;
     }
@@ -77,7 +77,7 @@ export default function RegisterPage({
 
     if (res.ok) {
       // ✅ Redirect to login with success message
-      router.push(`/${locale}/login?message=${encodeURIComponent("Registration successful! Please log in.")}`);
+      router.push(`/${locale}/login?message=${encodeURIComponent(t('registrationSuccess'))}`);
     } else {
       setMessage(data.message);
       setIsSuccess(res.ok);

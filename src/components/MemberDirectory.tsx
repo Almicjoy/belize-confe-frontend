@@ -156,6 +156,16 @@ const MemberDirectory: React.FC = () => {
         <div className="relative z-10 max-w-7xl mx-auto w-full">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
             <div className="space-y-8 lg:col-span-2 items-center">
+              <div className="w-full block lg:hidden">
+                <iframe
+                  className="w-full h-64 sm:h-80 object-cover"
+                  src="https://www.youtube.com/embed/7pJ0YCYm8MY?autoplay=1&mute=1&loop=1&playlist=7pJ0YCYm8MY&controls=0&modestbranding=1&showinfo=0&rel=0"
+                  title="Landing Video (Mobile)"
+                  frameBorder="0"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                ></iframe>
+              </div>
               <div className="space-y-6">
                 <h1
                   className="text-5xl font-extrabold leading-tight text-center"
@@ -194,16 +204,7 @@ const MemberDirectory: React.FC = () => {
               <Image src="/logo.png" alt="Logo" width={600} height={600} />
 
               {/* Show video BELOW logo only on small screens */}
-              <div className="w-full block lg:hidden">
-                <iframe
-                  className="w-full h-64 sm:h-80 object-cover"
-                  src="https://www.youtube.com/embed/7pJ0YCYm8MY?autoplay=1&mute=1&loop=1&playlist=7pJ0YCYm8MY&controls=0&modestbranding=1&showinfo=0&rel=0"
-                  title="Landing Video (Mobile)"
-                  frameBorder="0"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                ></iframe>
-              </div>
+
             </div>
           </div>
         </div>

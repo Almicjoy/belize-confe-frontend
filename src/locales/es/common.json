@@ -236,6 +236,10 @@
     "paymentAmount": "Monto del Pago",
     "cancel": "Cancelar",
     "processing": "Procesando...",
-    "pay": "Pagar"
+    "pay": "Pagar",
+    "registrationSuccess": "¡Registro exitoso! Por favor, inicie sesión.",
+    "passwordMatch": "Las contraseñas no coinciden",
+    "nextPaymentDue": "Próximo pago"
+
 
 }
