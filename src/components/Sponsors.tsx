@@ -6,6 +6,7 @@ interface Sponsor {
   id: number;
   name: string;
   website: string;
+  logo: string;
 }
 
 interface SponsorCardProps {
@@ -21,66 +22,86 @@ interface SponsorTierProps {
 }
 
 const SponsorsComponent: React.FC = () => {
-  // Mock sponsor data - you can replace this with real data
   const sponsors = {
     all: [
-      { id: 1, name: "Major Tech Corp", website: "https://example.com" },
-      { id: 2, name: "Innovation Partners", website: "https://example.com" },
-      { id: 3, name: "Digital Solutions Inc", website: "https://example.com" },
-      { id: 4, name: "Future Systems", website: "https://example.com" },
-      { id: 5, name: "Global Enterprises", website: "https://example.com" },
-      { id: 6, name: "Tech Pioneers", website: "https://example.com" },
-      { id: 7, name: "Smart Industries", website: "https://example.com" },
-      { id: 8, name: "Next Gen Labs", website: "https://example.com" },
-      { id: 9, name: "Cloud Dynamics", website: "https://example.com" },
-      { id: 10, name: "Data Insights Co", website: "https://example.com" },
-      { id: 11, name: "AI Innovations", website: "https://example.com" },
-      { id: 12, name: "Cyber Security Plus", website: "https://example.com" }
+      { 
+        id: 1, 
+        name: "The Grand Resort and Residences", 
+        website: "https://grandresortandresidencesbz.com/",
+        logo: "grand_resort.png"
+      },
+      { 
+        id: 2, 
+        name: "Oceana Belize", 
+        website: "https://belize.oceana.org/",
+        logo: "oceana.png"
+      },
+      { 
+        id: 3, 
+        name: "Marie Sharp's", 
+        website: "https://www.mariesharps.bz/",
+        logo: "marie_sharp.jpeg"
+      },
+      { 
+        id: 4, 
+        name: "Travellers Liquors Belize", 
+        website: "https://www.onebarrelrum.com/home",
+        logo: "travellers.png"
+      }
     ]
   };
 
   const { t } = useTranslation();
 
-  const SponsorCard: React.FC<SponsorCardProps> = ({ sponsor, size }) => (
-    <a
-      href={sponsor.website}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group block transition-all duration-300 hover:scale-105"
-    >
-      <div
-        className="rounded-2xl p-6 transition-all duration-300 group-hover:shadow-lg border backdrop-blur-sm"
-        style={{
-          backgroundColor: palette.cardBg,
-          borderColor: palette.cardBorder,
-          boxShadow: palette.cardShadow
-        }}
+  const SponsorCard: React.FC<SponsorCardProps> = ({ sponsor, size }) => {
+    // Define consistent card dimensions
+    const cardDimensions = {
+      large: { width: '220px', height: '260px', logoHeight: '150px' },
+      medium: { width: '180px', height: '220px', logoHeight: '120px' },
+      small: { width: '150px', height: '180px', logoHeight: '100px' },
+      'extra-small': { width: '120px', height: '150px', logoHeight: '80px' },
+    }[size];
+
+    return (
+      <a
+        href={sponsor.website}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group block transition-all duration-300 hover:scale-105"
+        style={{ width: cardDimensions.width }}
       >
         <div
-          className="flex items-center justify-center rounded-xl mb-4 transition-colors duration-300"
+          className="rounded-2xl p-4 flex flex-col items-center justify-between border backdrop-blur-sm transition-all duration-300 group-hover:shadow-lg"
           style={{
-            backgroundColor: palette.hobbyBg,
-            height: size === 'large' ? '120px' : size === 'medium' ? '100px' : size === 'small' ? '80px' : '60px'
+            height: cardDimensions.height,
+            backgroundColor: palette.cardBg,
+            borderColor: palette.cardBorder,
+            boxShadow: palette.cardShadow,
           }}
         >
-          {/* Placeholder for sponsor logo */}
           <div
-            className="text-center opacity-60 transition-opacity duration-300 group-hover:opacity-80"
-            style={{ color: palette.hobbyText }}
+            className="flex items-center justify-center w-full rounded-xl overflow-hidden mb-3 transition-all duration-300"
+            style={{
+              backgroundColor: palette.hobbyBg,
+              height: cardDimensions.logoHeight,
+            }}
           >
-            <div className="text-2xl mb-2">🏢</div>
-            <div className="text-xs font-medium">Logo</div>
+            <img
+              src={sponsor.logo}
+              alt={sponsor.name}
+              className="object-contain h-full w-auto opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+            />
           </div>
+          <h3
+            className="text-center font-semibold text-sm transition-colors duration-300 line-clamp-2 leading-tight"
+            style={{ color: palette.text, minHeight: '2.5em' }}
+          >
+            {sponsor.name}
+          </h3>
         </div>
-        <h3
-          className="text-center font-semibold text-sm transition-colors duration-300"
-          style={{ color: palette.text }}
-        >
-          {sponsor.name}
-        </h3>
-      </div>
-    </a>
-  );
+      </a>
+    );
+  };
 
   const SponsorTier: React.FC<SponsorTierProps> = ({ title, sponsors, size, titleColor }) => (
     <div className="mb-12">
@@ -96,9 +117,9 @@ const SponsorsComponent: React.FC = () => {
           style={{ backgroundColor: titleColor }}
         />
       </div>
-      <div className="grid gap-6 justify-items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 max-w-7xl mx-auto">
+      <div className="grid gap-8 justify-items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 max-w-7xl mx-auto">
         {sponsors.map((sponsor) => (
-          <SponsorCard key={sponsor.id} sponsor={sponsor} size="medium" />
+          <SponsorCard key={sponsor.id} sponsor={sponsor} size={size} />
         ))}
       </div>
     </div>
@@ -110,7 +131,6 @@ const SponsorsComponent: React.FC = () => {
       style={{ backgroundColor: palette.background }}
     >
       <div className="max-w-7xl mx-auto">
-        {/* Main Title */}
         <div className="text-center mb-16">
           <h1
             className="text-5xl font-bold mb-4 transition-colors duration-300"
@@ -126,7 +146,6 @@ const SponsorsComponent: React.FC = () => {
           </p>
         </div>
 
-        {/* All Sponsors in One Grid */}
         <SponsorTier
           title={t('eventSponsors')}
           sponsors={sponsors.all}
