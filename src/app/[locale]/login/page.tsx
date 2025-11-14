@@ -23,6 +23,10 @@ export default function LoginPage({
   const [registerError, setRegisterError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotMessage, setForgotMessage] = useState("");
+  const [forgotError, setForgotError] = useState("");
   const router = useRouter();
   const { locale } = React.use(params);
 
@@ -54,6 +58,25 @@ export default function LoginPage({
     }
     
     setIsLoading(false);
+  };
+
+  const handleForgotPassword = async () => {
+    setForgotMessage("");
+    setForgotError("");
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/request-reset`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: forgotEmail }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setForgotError(data.message || "Unable to send reset link.");
+    } else {
+      setForgotMessage("A reset link has been sent if an account exists.");
+    }
   };
 
   return (
@@ -220,26 +243,17 @@ export default function LoginPage({
                 </div>
               </div>
 
-              {/* Remember Me & Forgot Password */}
-              {/* <div className="flex items-center justify-between">
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    className="rounded border-2 text-blue-600 focus:ring-blue-500"
-                    style={{ accentColor: palette.primary }}
-                  />
-                  <span className="text-sm" style={{ color: palette.textSecondary }}>
-                    {t('remember')}
-                  </span>
-                </label>
-                <a 
-                  href="#" 
-                  className="text-sm hover:underline transition-colors duration-200"
+              {/* Forgot Password */}
+              <div className="text-center mt-4">
+                <button
+                  type="button"
+                  onClick={() => setForgotOpen(true)}
+                  className="text-sm font-semibold hover:underline"
                   style={{ color: palette.primary }}
                 >
-                  {t('forgotPassword')}
-                </a>
-              </div> */}
+                  {t("forgotPassword")}
+                </button>
+              </div>
 
               {/* Login Button */}
               <button
@@ -277,6 +291,53 @@ export default function LoginPage({
             </p>
             </div>
           </div>
+
+          {forgotOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm">
+
+              <h3 className="text-lg font-semibold mb-4" style={{ color: palette.text }}>
+                Reset Password
+              </h3>
+
+              {forgotMessage && (
+                <p className="p-3 text-green-700 bg-green-100 border border-green-300 rounded mb-3">
+                  {forgotMessage}
+                </p>
+              )}
+
+              {forgotError && (
+                <p className="p-3 text-red-700 bg-red-100 border border-red-300 rounded mb-3">
+                  {forgotError}
+                </p>
+              )}
+
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                className="w-full p-3 border rounded-xl mb-4"
+              />
+
+              <button
+                onClick={handleForgotPassword}
+                className="w-full py-3 rounded-xl font-semibold"
+                style={{ background: palette.primary, color: palette.white }}
+              >
+                Send Reset Link
+              </button>
+
+              <button
+                onClick={() => setForgotOpen(false)}
+                className="mt-3 w-full text-sm text-gray-500 hover:underline"
+              >
+                Close
+              </button>
+
+            </div>
+          </div>
+        )}
         </div>
       </div>
 

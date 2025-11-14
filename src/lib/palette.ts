@@ -16,6 +16,7 @@ export const palette = {
   hobbyBg: "#e0fcffff",
   hobbyText: "#3c6dffff",
   success: "#4CAF50",
+  error: "#d03535ff",
   white: "#FFFFFF",
   lightOrange: "#f0feffff",
 } as const;
