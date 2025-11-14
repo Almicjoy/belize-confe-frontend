@@ -96,20 +96,18 @@
     "resortWebsite": "Ver Sitio Web del Resort",
     "room": [
         {
-            "id": 1001,
-            "name": "Luxury Deluxe King",
-            "guests": 2,
-            "description": "Perfecto para parejas. Espacio cómodo e íntimo.",
-            "amenities": ["Cama King", "Baño Privado"],
-            "image": "acc-3.jpg",
-            "extraFees": true
-        },
-        {
             "id": 1002,
             "name": "Luxury Deluxe Queen",
             "guests": 2,
-            "description": "Perfecto para parejas. Espacio cómodo e íntimo.",
-            "amenities": ["Cama Queen", "Baño Privado"],
+            "description": "Perfecto para parejas.",
+            "amenities": [
+                "Espacio en habitación para 2 personas", 
+                "Acceso completo a la conferencia",
+                "Todas las actividades de la conferencia",
+                "Todas las comidas",
+                "Paquete de bienvenida",
+                "Camiseta de la conferencia"
+            ],
             "image": "acc-4.jpg",
             "extraFees": false
         },
@@ -117,24 +115,22 @@
             "id": 1003,
             "name": "Luxury Queen 2",
             "guests": 4,
-            "description": "Ideal para grupos de amigos. Diseño espacioso con comodidades modernas.",
-            "amenities": ["2 Camas Queen", "1 Baño"],
-            "image": "acc-5.jpg",
-            "extraFees": false
-        },
-        {
-            "id": 1004,
-            "name": "Superior Suite",
-            "guests": 5,
-            "description": "Suite de lujo perfecta para grupos grandes. Espacio premium con mayor comodidad y estilo.",
-            "amenities": ["2 Camas Queen + Cama Extra", "1 Baño", "Sala de Estar"],
+            "description": "Ideal para grupos de amigos.",
+            "amenities": [
+                "Espacio en habitación para 4 personas", 
+                "Acceso completo a la conferencia",
+                "Todas las actividades de la conferencia",
+                "Todas las comidas",
+                "Paquete de bienvenida",
+                "Camiseta de la conferencia"
+            ],
             "image": "acc-5.jpg",
             "extraFees": false
         }
     ],
     "extraFee": "Cargos Adicionales: + $100 USD",
     "guests": "Huéspedes",
-    "roomAmenities": "Comodidades de la Habitación",
+    "roomAmenities": "El precio incluye:",
     "includedServices": "Servicios Incluidos",
     "roomExtras": "Alojamientos de lujo • Ubicación frente a la playa • Gastronomía de clase mundial • Instalaciones de conferencia",
     "wifi": "Wi-Fi Gratis",
@@ -227,7 +223,7 @@
     "firstPaymentTotal": "Total del Primer Pago",
     "remaining": "Restante",
     "totalCharge": "Cargo Total",
-    "promoDiscount": "Descuento de Promoción – solo aplicado al primer pago",
+    "promoDiscount": "Descuento de Promoción",
     "paymentSuccess": "¡Pago Exitoso!",
     "paymentOf": "Su pago de",
     "beenProcessed": "ha sido procesado.",
@@ -239,7 +235,8 @@
     "pay": "Pagar",
     "registrationSuccess": "¡Registro exitoso! Por favor, inicie sesión.",
     "passwordMatch": "Las contraseñas no coinciden",
-    "nextPaymentDue": "Próximo pago"
+    "nextPaymentDue": "Próximo pago",
+    "perPerson": "por persona"
 
 
 }

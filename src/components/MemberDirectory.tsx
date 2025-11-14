@@ -195,7 +195,8 @@ const MemberDirectory: React.FC = () => {
                 </p>
               </div>
 
-              <div className="flex justify-center">
+              <div className="flex justify-center space-x-4">
+                {/* Browse Promos Button */}
                 <button
                   className="px-8 py-4 text-lg font-bold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer"
                   style={{
@@ -207,7 +208,26 @@ const MemberDirectory: React.FC = () => {
                 >
                   {t("browsePromos")}
                 </button>
+
+                {/* Instagram Button */}
+                <a
+                  href="https://www.instagram.com/laconfertc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center px-8 py-4 text-lg font-bold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer space-x-2"
+                  style={{
+                    backgroundColor: "#E1306C", // Instagram pink
+                    color: palette.white,
+                    boxShadow: `0 8px 25px #E1306C30`,
+                    textAlign: "center",
+                  }}
+                >
+                  <Instagram size={24} />
+                  <span>Instagram</span>
+                </a>
+
               </div>
+
             </div>
 
             {/* Logo and Mobile Video */}

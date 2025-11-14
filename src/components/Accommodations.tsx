@@ -174,13 +174,18 @@ const Accommodations: React.FC = () => {
                       <h4 className="text-sm font-semibold" style={{ color: palette.text }}>
                         {t("roomAmenities")}
                       </h4>
+
                       {price && (
-                        <span className="text-4xl font-bold" style={{ color: palette.primary }}>
-                          ${price.toLocaleString()}
-                        </span>
+                        <div className="flex flex-col items-end">
+                          <span className="text-4xl font-bold" style={{ color: palette.primary }}>
+                            ${price.toLocaleString()}
+                          </span>
+                          <span className="text-xl" style={{ color: palette.primary }}>
+                            {t("perPerson")}
+                          </span>
+                        </div>
                       )}
                     </div>
-
                     <div className="grid grid-cols-1 gap-2">
                       {room.amenities.map((amenity, index) => (
                         <div key={index} className="flex items-center space-x-2">

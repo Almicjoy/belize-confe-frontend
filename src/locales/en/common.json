@@ -96,20 +96,18 @@
     "resortWebsite": "View Resort Website",
     "room": [
         {
-            "id": 1001,
-            "name": "Luxury Deluxe King",
-            "guests": 2,
-            "description": "Perfect for couples. Comfortable and intimate space.",
-            "amenities": ["King Bed", "Private Bathroom"],
-            "image": "acc-3.jpg",
-            "extraFees": true
-        },
-        {
             "id": 1002,
             "name": "Luxury Deluxe Queen",
             "guests": 2,
-            "description": "Perfect for couples. Comfortable and intimate space.",
-            "amenities": ["Queen Bed", "Private Bathroom"],
+            "description": "Perfect for couples.",
+            "amenities": [
+                "Accommodation in a 2-person room",
+                "Full conference access",
+                "All conference activities",
+                "All meals",
+                "Welcome package",
+                "Conference T-shirt"
+            ],
             "image": "acc-4.jpg",
             "extraFees": false
         },
@@ -117,24 +115,22 @@
             "id": 1003,
             "name": "Luxury Queen 2",
             "guests": 4,
-            "description": "Ideal for groups of friends. Spacious layout with modern amenities.",
-            "amenities": ["2 Queen Beds", "1 Bathroom"],
+            "description": "Ideal for groups of friends.",
+            "amenities": [
+                "Accommodation in a 4-person room",
+                "Full conference access",
+                "All conference activities",
+                "All meals",
+                "Welcome package",
+                "Conference T-shirt"
+            ],
             "image": "acc-5.jpg",
-            "extraFees": false
-        },
-        {
-            "id": 1004,
-            "name": "Superior Suite",
-            "guests": 5,
-            "description": "Luxury suite perfect for larger groups. Premium space with enhanced comfort and style.",
-            "amenities": ["2 Queen Beds + Extra Bed", "1 Bathroom", "Living Area"],
-            "image": "acc-2.jpg",
             "extraFees": false
         }
     ],
     "extraFee": "Extra Fees: + $100 USD",
     "guests": "Guests",
-    "roomAmenities": "Room Amenities",
+    "roomAmenities": "Price Includes:",
     "includedServices": "Included Services",
     "roomExtras": "Luxury accommodations • Beachfront location • World-class dining • Conference facilities",
     "wifi": "Free Wi-Fi",
@@ -227,7 +223,7 @@
     "firstPaymentTotal": "First Payment Total",
     "remaining": "Remaining",
     "totalCharge": "Total Charge",
-    "promoDiscount": "Promo Discount - only applied to first payment",
+    "promoDiscount": "Promo Discount",
     "paymentSuccess": "Payment Successful!",
     "paymentOf": "Your payment of",
     "beenProcessed": "has been processed.",
@@ -239,7 +235,8 @@
     "pay": "Pay",
     "registrationSuccess": "Registration Successful! Please log in.",
     "passwordMatch": "Passwords don't match",
-    "nextPaymentDue": "Next Payment Due"
+    "nextPaymentDue": "Next Payment Due",
+    "perPerson": "per person"
 
 
 

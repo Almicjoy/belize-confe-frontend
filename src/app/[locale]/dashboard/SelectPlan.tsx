@@ -42,6 +42,15 @@ interface SessionData {
     selectedPlan?: string;
 }
 
+interface Promo {
+  _id: string;
+  code: string;
+  amount: number;
+  discount: number;
+  room_type: string;
+  date_active: string;
+}
+
 interface SelectPlanProps {
   sessionData?: SessionData;
 }
@@ -61,6 +70,9 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
   const [availabilityMap, setAvailabilityMap] = useState<Record<number, number>>({});
   const [roomPrice, setRoomPrice] = useState<Record<number, number>>({});
   const [selectedRoomPrice, setSelectedRoomPrice] = useState<number | null>(null);
+  
+  // NEW: Store calculated promo discount in state
+  const [promoDiscount, setPromoDiscount] = useState<number>(0);
 
   const { t } = useTranslation();
   const plans: Plan[] = t("plans") as unknown as Plan[];
@@ -73,42 +85,78 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
   const handleSelectRoom = (roomId: number) => {
     if (availabilityMap[roomId] == 0) return; 
     setSelectedRoom(roomId);
-    setSelectedRoomPrice(roomPrice[roomId] ?? null); // store price when selecting
+    setSelectedRoomPrice(roomPrice[roomId] ?? null);
   };
 
-  const getValidPromo = (code: string) => {
-    const now = new Date();
-    return promoData.promoCodes.find(
-      (p) =>
-        p.code.toUpperCase() === code.toUpperCase() &&
-        now >= new Date(p.validFrom) &&
-        now <= new Date(p.validTo)
-    );
+  const getValidPromo = async (code: string): Promise<Promo | null> => {
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/promo?code=${encodeURIComponent(code)}`;
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        return null;
+      }
+
+      const promo: Promo = await response.json();
+      const now = new Date();
+
+      if (promo.date_active) {
+        const activeDate = new Date(promo.date_active);
+        if (now < activeDate) {
+          return null; // Promo not active yet
+        }
+      }
+
+      if (promo.amount <= 0) {
+        return null;
+      }
+
+      return promo;
+    } catch (err) {
+      console.error("Error fetching promo:", err);
+      return null;
+    }
   };
 
-  // Calculate discounted amount based on the promo
-  const calculateFinalAmount = (plan: Plan, isFirstPayment: boolean) => {
-    let amount = (Number(selectedRoomPrice) / plan.installments);
+  const calculateFinalAmount = async (plan: Plan) => {
+    let amount = Number(selectedRoomPrice);
 
-    // Apply promo code discount only on the first payment
-    if (isFirstPayment && promoApplied && promoCode.trim()) {
-      const promo = getValidPromo(promoCode);
+    if (promoApplied && promoCode.trim()) {
+      const promo = await getValidPromo(promoCode);
       if (promo) {
-        amount = Math.max(amount - promo.discountAmount, 0);
+        amount = amount * (1 - promo.discount);
       }
     }
 
     return amount;
   };
 
-  // Apply promo code button handler
-  const handleApplyPromo = () => {
+  // NEW: Calculate promo discount when promo is applied
+  useEffect(() => {
+    const calculateDiscount = async () => {
+      if (promoApplied && promoCode.trim() && selectedRoomPrice) {
+        const promo = await getValidPromo(promoCode);
+        if (promo) {
+          const discount = Number(selectedRoomPrice) * promo.discount;
+          setPromoDiscount(discount);
+        } else {
+          setPromoDiscount(0);
+        }
+      } else {
+        setPromoDiscount(0);
+      }
+    };
+
+    calculateDiscount();
+  }, [promoApplied, promoCode, selectedRoomPrice, selectedPlan]);
+
+  const handleApplyPromo = async () => {
     if (!promoCode.trim()) {
       setPromoStatus("error");
       return;
     }
 
-    const promo = getValidPromo(promoCode);
+    const promo = await getValidPromo(promoCode);
     if (!promo) {
       setPromoStatus("error");
       setPromoApplied(false);
@@ -118,7 +166,6 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
     setPromoApplied(true);
     setPromoStatus("success");
   };
-
 
   const handlePurchase = async (plan: Plan) => {
     if (!sessionData?.email || !sessionData.firstName) {
@@ -130,10 +177,10 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
     setMessage(null);
 
     try {
-      const discountedAmount = calculateFinalAmount(plan, true);
+      const discountedAmount = await calculateFinalAmount(plan);
 
       const payload = {
-        amount: Math.round(discountedAmount * 100) * 2, // cents
+        amount: Math.round(discountedAmount * 100) * 2 / plan.installments,
         description: `Belize 2026 Conference Registration - Payment 1`,
         returnUrl: process.env.NEXT_PUBLIC_RETURN_URL || "",
         orderNumber: uuidv4(),
@@ -200,7 +247,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
     if (!cutoff) return false;
     const today = new Date();
     const cutoffDate = new Date(cutoff);
-    return cutoffDate < today; // true if already expired
+    return cutoffDate < today;
   };
 
   return (
@@ -209,14 +256,12 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
       style={{ background: `linear-gradient(135deg, ${palette.lightOrange} 0%, ${palette.hobbyBg} 100%)` }}
     >
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-
         {/* Room Selection */}
         <div className="mb-6">
           <h2 className="text-xl font-bold mb-4 text-center" style={{ color: palette.text }}>
             {t('conferenceAccommodations')}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {rooms.map((room) => {
               const isSoldOut = (availabilityMap[room.id] == 0);
               const isLowAvailability = availabilityMap[room.id] != null && availabilityMap[room.id] > 0 && availabilityMap[room.id] < 5;
@@ -297,7 +342,6 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
           </div>
         </div>
 
-
         <div className="text-center mb-12">
           <h1 
             className="text-xl font-bold mb-4"
@@ -331,7 +375,6 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
               }}
               onClick={!isCutoffPast(plan.cutoff) ? () => handlePlanSelect(plan.id) : undefined}
             >
-              {/* Savings Badge */}
               {plan.savings && !plan.popular && (
                 <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
                   <span 
@@ -344,26 +387,23 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
               )}
 
               <div className="p-4 cursor-pointer">
-                {/* Plan Header */}
                 <div className="text-center mb-4">
                   <Calendar className="w-6 h-6 mx-auto mb-2" style={{ color: palette.primary }} />
                   <h3 className="text-xl font-bold mb-1" style={{ color: palette.text }}>
                     {plan.installments} {plan.installments === 1 ? t('payment1') : t('payments')}
                   </h3>
                   <div className="text-2xl font-bold mb-1" style={{ color: palette.primary }}>
-                    ${(Number(selectedRoomPrice) / plan.installments).toFixed(2)}
+                    ${selectedRoomPrice ? (Number(selectedRoomPrice) / plan.installments).toFixed(2) : '0.00'}
                   </div>
                   <p className="text-xs" style={{ color: palette.textLight }}>
                     {plan.installments > 1 ? t('perPayment') : t('onetime')}
                   </p>
                 </div>
 
-                {/* Payment Schedule */}
                 <p className="text-center text-xs rounded-lg p-2 mb-4" style={{ color: palette.textSecondary, backgroundColor: palette.hobbyBg }}>
                   {plan.paymentSchedule}
                 </p>
 
-                {/* Selection Indicator */}
                 {selectedPlan === plan.id && (
                   <div className="absolute top-3 right-3">
                     <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: palette.primary }}>
@@ -376,7 +416,6 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
           ))}
         </div>
 
-        {/* Pricing Note */}
         <div className="text-center mb-8">
           <p className="text-sm italic" style={{ color: palette.textSecondary }}>
             {t('exchangeRate')}
@@ -386,7 +425,6 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
         {/* Purchase Section */}
         {selectedPlan && (
           <div className="text-center max-w-md mx-auto px-4 sm:px-0">
-
             {/* Promo Code Input */}
             <div 
               className="mb-6 p-4 rounded-xl border"
@@ -442,21 +480,19 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
                 >
                   {promoStatus === "success" ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
                   {promoStatus === "success"
-                    ? `${t('promoCode')} “${promoCode}” ${t('appliedSuccess')}`
+                    ? `${t('promoCode')} "${promoCode}" ${t('appliedSuccess')}`
                     : t('appliedInvalid')}
                 </p>
               )}
             </div>
 
-            {/* Payment Breakdown */}
+            {/* Payment Breakdown - NOW SYNCHRONOUS */}
             {(() => {
               const plan = plans.find(p => p.id === selectedPlan);
-              if (!plan) return null;
+              if (!plan || !selectedRoomPrice) return null;
 
               const baseAmount = (Number(selectedRoomPrice) / plan.installments);
-              const promoDiscount = promoApplied && getValidPromo(promoCode) ? getValidPromo(promoCode)!.discountAmount : 0;
-
-              const firstPayment = Math.max(baseAmount - promoDiscount, 0);
+              const firstPayment = Math.max(baseAmount - (promoDiscount / plan.installments), 0);
               const remainingPayments = plan.installments > 1 ? baseAmount * (plan.installments - 1) : 0;
 
               return (
@@ -476,7 +512,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
                     {promoDiscount > 0 && (
                       <li className="flex justify-between text-green-600">
                         <span>{t('promoDiscount')}:</span>
-                        <span>- ${promoDiscount.toFixed(2)}</span>
+                        <span>- ${(promoDiscount / plan.installments).toFixed(2)}</span>
                       </li>
                     )}
                     <li className="flex justify-between font-medium mt-2 border-t pt-2">
@@ -499,35 +535,33 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
             })()}
 
             {/* Purchase Button */}
-              <button
-                disabled={isProcessing}
-                onClick={() => {
-                  const plan = plans.find(p => p.id === selectedPlan);
-                  if (plan) handlePurchase(plan);
-                }}
-                className="
-                  w-full 
-                  font-bold 
-                  py-3 sm:py-4   /* slightly less tall on mobile */
-                  px-6 sm:px-8   /* reduce padding for smaller screens */
-                  rounded-lg sm:rounded-xl /* softer radius on mobile */
-                  shadow-md hover:shadow-lg /* lighter shadows for mobile */
-                  transition-all duration-300 
-                  flex items-center justify-center gap-2 sm:gap-3 
-                  text-white 
-                  text-sm sm:text-lg   /* scale font */
-                "
-                style={{ 
-                  background: `linear-gradient(135deg, ${palette.primary} 0%, ${palette.tertiary} 100%)`,
-                }}
-              >
-                <CreditCard className="w-4 h-4 sm:w-6 sm:h-6" />
-                {isProcessing ? t('loading') : t('purchaseSelectedPlan')}
-              </button>
+            <button
+              disabled={isProcessing}
+              onClick={() => {
+                const plan = plans.find(p => p.id === selectedPlan);
+                if (plan) handlePurchase(plan);
+              }}
+              className="
+                w-full 
+                font-bold 
+                py-3 sm:py-4
+                px-6 sm:px-8
+                rounded-lg sm:rounded-xl
+                shadow-md hover:shadow-lg
+                transition-all duration-300 
+                flex items-center justify-center gap-2 sm:gap-3 
+                text-white 
+                text-sm sm:text-lg
+              "
+              style={{ 
+                background: `linear-gradient(135deg, ${palette.primary} 0%, ${palette.tertiary} 100%)`,
+              }}
+            >
+              <CreditCard className="w-4 h-4 sm:w-6 sm:h-6" />
+              {isProcessing ? t('loading') : t('purchaseSelectedPlan')}
+            </button>
           </div>
         )}
-
-
 
         {!selectedPlan && (
           <div className="text-center">
@@ -540,5 +574,3 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
 };
 
 export default SelectPlan;
-
-

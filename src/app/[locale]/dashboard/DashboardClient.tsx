@@ -16,6 +16,7 @@ interface Payment {
   planId: string;
   amount: number;
   selectedRoom: string;
+  promoCode: string;
 }
 
 interface Plan {
@@ -42,7 +43,16 @@ interface AccommodationRoom {
   price: number;
 }
 
-export default function DashboardClient() {
+interface Promo {
+  _id: string;
+  code: string;
+  amount: number;
+  discount: number;
+  room_type: string;
+  date_active: string;
+}
+
+const DashboardClient: React.FC = () => {
   const { data: session, status } = useSession();
   const [showPlans, setShowPlans] = useState(false);
   const router = useRouter();
@@ -62,6 +72,7 @@ export default function DashboardClient() {
   const [availabilityMap, setAvailabilityMap] = useState<Record<number, number>>({});
   const [roomPrice, setRoomPrice] = useState<Record<number, number>>({});
   const [selectedRoomPrice, setSelectedRoomPrice] = useState<number | null>(null);
+  const [finalPrice, setFinalPrice] = useState<number | null>(null);
   const [nextPayment, setNextPayment] = useState<null | {
     nextDueDate: string;
     installmentNumber: number;
@@ -91,6 +102,62 @@ export default function DashboardClient() {
     if (!selectedPlan) return null;
     return plans.find(plan => plan.id === parseInt(selectedPlan)) || null;
   };
+
+
+
+  useEffect(() => {
+
+    const getValidPromo = async (code: string): Promise<Promo | null> => {
+      try {
+        const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/promo?code=${encodeURIComponent(code)}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          // Promo not found or server error
+          return null;
+        }
+
+        const promo: Promo = await response.json();
+
+        const now = new Date();
+
+        // // Check if promo is expired
+        // if (promo.date_active) {
+        //   const activeDate = new Date(promo.date_active);
+        //   if (now > activeDate) {
+        //     return null; // promo expired
+        //   }
+        // }
+
+        // // Check if promo has remaining uses
+        // if (promo.amount <= 0) {
+        //   return null; // no more uses left
+        // }
+
+        return promo;
+      } catch (err) {
+        console.error("Error fetching promo:", err);
+        return null;
+      }
+    };
+    const calculatePrice = async () => {
+      if (!selectedRoom || payments.length === 0) return;
+
+      let amount = Number(roomPrice[Number(selectedRoom)]);
+
+      const promoCode = payments[0].promoCode?.trim();
+      if (promoCode) {
+        const promo = await getValidPromo(promoCode);
+        if (promo) {
+          amount = amount * (1 - promo.discount); // apply promo discount
+        }
+      }
+
+      setFinalPrice(amount);
+    };
+
+    calculatePrice();
+  }, [selectedRoom, roomPrice, payments]);
 
   // Populate user state when session is available
   useEffect(() => {
@@ -219,7 +286,11 @@ export default function DashboardClient() {
     async function fetchNextPayment() {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/next-due/${session?.user.id}`);
-        if (!res.ok) throw new Error("Failed to fetch next due payment");
+        if (res.status === 404) {
+          // No next payment yet — just ignore
+          setNextPayment(null);
+          return;
+        }
         const data = await res.json();
         setNextPayment(data);
       } catch (err) {
@@ -433,7 +504,7 @@ export default function DashboardClient() {
                   )}
                   
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm text-gray-600 bg-white px-3 sm:px-4 py-2 rounded-xl border border-green-100">
-                    <span className="font-medium">{t('totalAmount')}: ${roomPrice[Number(selectedRoom!)]}</span>
+                    <span className="font-medium">{t('totalAmount')}: ${finalPrice}</span>
                     <span className="text-xs sm:text-sm">{planDetails.installments} {t('installment')}{planDetails.installments > 1 ? 's' : ''}</span>
                   </div>
                   
@@ -474,15 +545,16 @@ export default function DashboardClient() {
                     </button>
                   )}
 
-                  {showNextPayment && 
-                  <MakePayment 
-                      sessionData={user} 
-                      paymentProgress={paymentProgress}
-                      plan={planDetails}
-                      room={selectedRoom}
-                      price={roomPrice[Number(selectedRoom!)]}
-                      onClose={() => setShowNextPayment(false)}
-                  />}
+                  {showNextPayment && finalPrice !== null && (
+                    <MakePayment 
+                        sessionData={user} 
+                        paymentProgress={paymentProgress}
+                        plan={planDetails}
+                        room={selectedRoom}
+                        price={finalPrice}  // safe now
+                        onClose={() => setShowNextPayment(false)}
+                    />
+                  )}
                 </div>
               </div>
             ) : hasSelectedPlan ? (
@@ -558,3 +630,5 @@ export default function DashboardClient() {
     </div>
   );
 }
+
+export default DashboardClient;

@@ -40,6 +40,8 @@ interface MakePaymentProps {
   onClose: () => void;
 }
 
+
+
 const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress, plan, room, price, onClose}) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
