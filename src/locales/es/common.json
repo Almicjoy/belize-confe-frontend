@@ -236,7 +236,18 @@
     "registrationSuccess": "¡Registro exitoso! Por favor, inicie sesión.",
     "passwordMatch": "Las contraseñas no coinciden",
     "nextPaymentDue": "Próximo pago",
-    "perPerson": "por persona"
-
-
+    "perPerson": "por persona",
+    "resetPassword": "Restablecer contraseña",
+    "sendResetLink": "Enviar enlace de restablecimiento",
+    "close": "Cerrar",
+    "unauthorizedToken": "Token no autorizado o caducado",
+    "newPassword": "Nueva contraseña",
+    "confirmNewPassword": "Confirmar nueva contraseña",
+    "resetting": "Restableciendo...",
+    "forgotMessage": "Se ha enviado un enlace de restablecimiento si la cuenta existe.",
+    "forgotError": "No se pudo enviar el enlace de restablecimiento.",
+    "fillBothFields": "Por favor completa ambos campos",
+    "passwordsDontMatch": "Las contraseñas no coinciden",
+    "resetFailed": "Error al restablecer",
+    "resetSuccessful": "Contraseña actualizada con éxito"
 }

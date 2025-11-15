@@ -67,15 +67,15 @@ export default function LoginPage({
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/request-reset`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: forgotEmail }),
+      body: JSON.stringify({ email: forgotEmail, locale }), // send locale
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      setForgotError(data.message || "Unable to send reset link.");
+      setForgotError(data.message || t('forgotError'));
     } else {
-      setForgotMessage("A reset link has been sent if an account exists.");
+      setForgotMessage(t('forgotMessage'));
     }
   };
 
@@ -297,7 +297,7 @@ export default function LoginPage({
             <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm">
 
               <h3 className="text-lg font-semibold mb-4" style={{ color: palette.text }}>
-                Reset Password
+                {t("resetPassword")}
               </h3>
 
               {forgotMessage && (
@@ -314,7 +314,7 @@ export default function LoginPage({
 
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t('enterEmail')}
                 value={forgotEmail}
                 onChange={(e) => setForgotEmail(e.target.value)}
                 className="w-full p-3 border rounded-xl mb-4"
@@ -325,14 +325,19 @@ export default function LoginPage({
                 className="w-full py-3 rounded-xl font-semibold"
                 style={{ background: palette.primary, color: palette.white }}
               >
-                Send Reset Link
+                {t("sendResetLink")}
               </button>
 
               <button
-                onClick={() => setForgotOpen(false)}
+                onClick={() => {
+                  setForgotOpen(false);
+                  setForgotEmail("");
+                  setForgotMessage("");
+                  setForgotError("");
+                }}
                 className="mt-3 w-full text-sm text-gray-500 hover:underline"
               >
-                Close
+                {t("close")}
               </button>
 
             </div>

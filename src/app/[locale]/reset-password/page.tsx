@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { palette } from "@/lib/palette";
+import { useTranslation } from "@/utils/useTranslation";
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
@@ -13,6 +14,9 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,12 +24,12 @@ export default function ResetPasswordPage() {
     setMessage("");
 
     if (!password || !confirmPassword) {
-      setError("Please fill in both fields");
+      setError(t('fillBothFields'));
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError(t('passwordsDontMatch'));
       return;
     }
 
@@ -40,13 +44,20 @@ export default function ResetPasswordPage() {
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.message || "Reset failed");
+      if (!res.ok) throw new Error(t('resetFailed'));
 
-      setMessage(data.message || "Password reset successfully!");
+      setMessage(t('resetSuccessful'));
       setPassword("");
       setConfirmPassword("");
+        // Navigate to login page after 2 seconds
+  setTimeout(() => {
+    router.push("/login"); // adjust path if your login page is different
+  }, 2000);
     } catch (err: any) {
       setError(err.message);
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
     } finally {
       setLoading(false);
     }
@@ -69,7 +80,7 @@ export default function ResetPasswordPage() {
           className="text-2xl font-semibold mb-4 text-center"
           style={{ color: palette.text }}
         >
-          Reset Password
+          {t('resetPassord')}
         </h2>
 
         {!token ? (
@@ -77,7 +88,7 @@ export default function ResetPasswordPage() {
             className="text-center font-medium"
             style={{ color: palette.error }}
           >
-            Unauthorized or invalid token.
+            {t('unauthorizedToken')}
           </p>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -86,7 +97,7 @@ export default function ResetPasswordPage() {
                 className="block mb-1 font-medium"
                 style={{ color: palette.textSecondary }}
               >
-                New Password
+                {t('newPassword')}
               </label>
               <input
                 type="password"
@@ -105,7 +116,7 @@ export default function ResetPasswordPage() {
                 onBlur={(e) =>
                   (e.currentTarget.style.boxShadow = `0 0 0 2px transparent`)
                 }
-                placeholder="Enter new password"
+                placeholder={t('newPassword')}
               />
             </div>
 
@@ -114,7 +125,7 @@ export default function ResetPasswordPage() {
                 className="block mb-1 font-medium"
                 style={{ color: palette.textSecondary }}
               >
-                Confirm New Password
+                {t('confirmNewPassword')}
               </label>
               <input
                 type="password"
@@ -133,7 +144,7 @@ export default function ResetPasswordPage() {
                 onBlur={(e) =>
                   (e.currentTarget.style.boxShadow = `0 0 0 2px transparent`)
                 }
-                placeholder="Confirm new password"
+                placeholder={t('confirmNewPassword')}
               />
             </div>
 
@@ -163,7 +174,7 @@ export default function ResetPasswordPage() {
                 color: palette.white,
               }}
             >
-              {loading ? "Resetting..." : "Reset Password"}
+              {loading ? t('resetting') : t('resetPassword')}
             </button>
           </form>
         )}

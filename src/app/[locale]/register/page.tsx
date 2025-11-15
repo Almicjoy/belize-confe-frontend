@@ -69,7 +69,8 @@ export default function RegisterPage({
         country,
         clubName,
         birthday,
-        password 
+        password,
+        locale
       }),
     });
 
@@ -153,17 +154,19 @@ export default function RegisterPage({
             }}
           >
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Message */}
-              {message && (
-                <div 
-                  className={`flex items-center space-x-2 p-4 rounded-2xl border animate-pulse ${
-                    isSuccess ? 'bg-green-50 border-green-200 text-green-600' : 'bg-red-50 border-red-200 text-red-600'
-                  }`}
-                >
-                  {isSuccess ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
-                  <span className="text-sm">{message}</span>
-                </div>
-              )}
+              <div className="flex justify-center items-center">
+                {/* Message */}
+                {message && (
+                  <div 
+                    className={`flex items-center space-x-2 p-4 rounded-2xl border animate-pulse ${
+                      isSuccess ? 'bg-green-50 border-green-200 text-green-600' : 'bg-red-50 border-red-200 text-red-600'
+                    }`}
+                  >
+                    {isSuccess ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
+                    <span className="text-sm">{message}</span>
+                  </div>
+                )}
+              </div>
 
               {/* Name Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

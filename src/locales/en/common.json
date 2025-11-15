@@ -236,8 +236,18 @@
     "registrationSuccess": "Registration Successful! Please log in.",
     "passwordMatch": "Passwords don't match",
     "nextPaymentDue": "Next Payment Due",
-    "perPerson": "per person"
-
-
-
+    "perPerson": "per person",
+    "resetPassword": "Reset Password",
+    "sendResetLink": "Send Reset Link",
+    "close": "Close",
+    "unauthorizedToken": "Unquthorized of Expired Token",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "resetting": "Resetting...",
+    "forgotMessage": "A reset link has been sent if an account exists.",
+    "forgotError": "Unable to send reset link.",
+    "fillBothFields": "Please fill both fields",
+    "passwordsDontMatch": "Passwors don't match",
+    "resetFailed": "Reset Failed",
+    "resetSuccessful": "Password Updated Successfully"
 }

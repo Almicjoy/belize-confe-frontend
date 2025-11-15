@@ -74,7 +74,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
   // NEW: Store calculated promo discount in state
   const [promoDiscount, setPromoDiscount] = useState<number>(0);
 
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const plans: Plan[] = t("plans") as unknown as Plan[];
   const rooms: AccommodationRoom[] = t("room") as unknown as AccommodationRoom[];
 
@@ -194,6 +194,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
         installments: plan.installments,
         promoCode: promoApplied ? promoCode : null,
         selectedRoom: selectedRoom,
+        locale: locale,
       };
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/register`, {
@@ -493,7 +494,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
 
               const baseAmount = (Number(selectedRoomPrice) / plan.installments);
               const firstPayment = Math.max(baseAmount - (promoDiscount / plan.installments), 0);
-              const remainingPayments = plan.installments > 1 ? baseAmount * (plan.installments - 1) : 0;
+              const remainingPayments = plan.installments > 1 ? (baseAmount - (promoDiscount / plan.installments)) * (plan.installments - 1) : 0;
 
               return (
                 <div 
