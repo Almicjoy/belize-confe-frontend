@@ -54,7 +54,14 @@ export default function LoginPage({
     if (res?.error) {
       setError("Invalid credentials");
     } else {
-      router.push(`/${locale}/dashboard`);
+        // ADMIN EMAIL CHECK
+        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+
+        if (adminEmail && email.toLowerCase() === adminEmail.toLowerCase()) {
+          router.push(`/${locale}/admin-dashboard`);
+        } else {
+          router.push(`/${locale}/dashboard`);
+        }
     }
     
     setIsLoading(false);

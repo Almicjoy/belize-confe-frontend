@@ -195,7 +195,7 @@ const MemberDirectory: React.FC = () => {
                 </p>
               </div>
 
-              <div className="flex justify-center space-x-4">
+              <div className="flex flex-col sm:flex-row justify-center sm:space-x-4 space-y-4 sm:space-y-0">
                 {/* Browse Promos Button */}
                 <button
                   className="px-8 py-4 text-lg font-bold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer"
@@ -225,18 +225,25 @@ const MemberDirectory: React.FC = () => {
                   <Instagram size={24} />
                   <span>Instagram</span>
                 </a>
-
               </div>
+
 
             </div>
 
             {/* Logo and Mobile Video */}
             <div className="relative lg:col-span-1 flex flex-col items-center gap-6">
-              <Image src="/logo.png" alt="Logo" width={600} height={600} />
+              <video
+                src="/logo-animation.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-100 h-100 object-contain"
+              />
 
               {/* Show video BELOW logo only on small screens */}
-
             </div>
+
           </div>
         </div>
       </section>
