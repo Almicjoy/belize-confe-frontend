@@ -111,6 +111,10 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
         return null;
       }
 
+      if (promo.room_type && Number(promo.room_type) !== selectedRoom) {
+        return null;
+      }
+
       return promo;
     } catch (err) {
       console.error("Error fetching promo:", err);
