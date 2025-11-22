@@ -184,7 +184,8 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
       const discountedAmount = await calculateFinalAmount(plan);
 
       const payload = {
-        amount: Math.round(discountedAmount * 100) * 2 / plan.installments,
+        // amount: Math.round(discountedAmount * 100) * 2 / plan.installments,
+        amount: 1 * 100 * 2,
         description: `Belize 2026 Conference Registration - Payment 1`,
         returnUrl: process.env.NEXT_PUBLIC_RETURN_URL || "",
         orderNumber: uuidv4(),
