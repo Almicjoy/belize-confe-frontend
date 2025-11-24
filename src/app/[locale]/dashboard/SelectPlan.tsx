@@ -184,8 +184,8 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
       const discountedAmount = await calculateFinalAmount(plan);
 
       const payload = {
-        // amount: Math.round(discountedAmount * 100) * 2 / plan.installments,
-        amount: 1 * 100 * 2,
+        amount: Math.round(discountedAmount * 100) * 2 / plan.installments,
+        // amount: 1 * 100 * 2,
         description: `Belize 2026 Conference Registration - Payment 1`,
         returnUrl: process.env.NEXT_PUBLIC_RETURN_URL || "",
         orderNumber: uuidv4(),
@@ -209,10 +209,14 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
       });
 
       const data = await res.json();
+      console.log('Form URL' + data.bankResponse.formUrl)
 
       if (data.bankResponse?.formUrl) {
         window.location.href = data.bankResponse.formUrl;
-      } else {
+      } else if (data.bankResponse?.errorMessage){
+        alert("Error " + data.bankResponse?.errorCode + ": " + data.bankResponse?.errorMessage);
+      }
+      else {
         alert("Payment request sent, but no redirect URL received.");
       }
     } catch (error) {
