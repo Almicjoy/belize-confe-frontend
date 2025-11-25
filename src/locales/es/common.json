@@ -249,5 +249,10 @@
     "fillBothFields": "Por favor completa ambos campos",
     "passwordsDontMatch": "Las contraseñas no coinciden",
     "resetFailed": "Error al restablecer",
-    "resetSuccessful": "Contraseña actualizada con éxito"
+    "resetSuccessful": "Contraseña actualizada con éxito",
+    "countdown": "Primer Gran Promo",
+    "days": "Dias",
+    "hours": "Horas",
+    "minutes": "Minutos",
+    "seconds": "Segundos"
 }

@@ -249,5 +249,10 @@
     "fillBothFields": "Please fill both fields",
     "passwordsDontMatch": "Passwors don't match",
     "resetFailed": "Reset Failed",
-    "resetSuccessful": "Password Updated Successfully"
+    "resetSuccessful": "Password Updated Successfully",
+    "countdown": "Countdown to First Promo",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds"
 }

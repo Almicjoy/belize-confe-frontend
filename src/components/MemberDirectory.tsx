@@ -11,6 +11,7 @@ import ShowcasePlans from './ShowcasePlans';
 import Accommodations from './Accommodations';
 import SponsorsComponent from './Sponsors';
 import { Instagram } from 'lucide-react';
+import CountdownDrawer from './CountDown';
 
 if (typeof document !== 'undefined' && !document.getElementById('google-font-poppins')) {
   const link = document.createElement('link');
@@ -134,6 +135,7 @@ const MemberDirectory: React.FC = () => {
 
   return (
     <>
+    <CountdownDrawer/>
       <section
         ref={heroRef}
         className="w-full min-h-screen px-2 py-20 pt-28 relative flex items-center overflow-hidden"
