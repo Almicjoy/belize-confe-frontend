@@ -318,14 +318,10 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
                       {room.name}
                     </h3>
                     <div className="text-2xl font-bold mb-1" style={{ color: palette.primary }}>
-                      ${Number(roomPrice[room.id]).toFixed(2)}
+                      ${Number(roomPrice[room.id]).toFixed(2)} {t('perPerson')}
                     </div>
                     <div className="flex items-center space-x-1 px-3 py-1 rounded-full"
                         style={{ backgroundColor: palette.hobbyBg }}>
-                      <Users size={14} style={{ color: palette.primary }} />
-                      <span className="text-sm font-semibold" style={{ color: palette.hobbyText }}>
-                        {room.guests} {t('guests')}
-                      </span>
                     </div>
                     <ul className="text-sm space-y-1" style={{ color: palette.textLight }}>
                       {room.amenities.map((feat, i) => (
