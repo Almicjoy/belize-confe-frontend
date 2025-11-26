@@ -132,7 +132,7 @@ export default function CountdownDrawer() {
                   key={idx}
                   className="flex flex-col items-center justify-center rounded-lg sm:rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200"
                   style={{
-                    minWidth: "52px",
+                    minWidth: "65px",
                     width: "52px",
                     height: "52px",
                     backgroundColor: palette.hobbyBg,

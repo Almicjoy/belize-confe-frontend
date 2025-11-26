@@ -135,7 +135,7 @@ const MemberDirectory: React.FC = () => {
 
   return (
     <>
-    <CountdownDrawer/>
+    
       <section
         ref={heroRef}
         className="w-full min-h-screen px-2 py-20 pt-28 relative flex items-center overflow-hidden"
@@ -143,6 +143,7 @@ const MemberDirectory: React.FC = () => {
           background: "linear-gradient(135deg, #003459 0%, #0A192F 100%)",
         }}
       >
+        <CountdownDrawer/>
         {/* Background Video - only visible on large screens */}
         <div className="hidden lg:block absolute top-0 left-0 w-full h-full">
           <iframe
