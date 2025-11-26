@@ -140,7 +140,7 @@ const MemberDirectory: React.FC = () => {
         ref={heroRef}
         className="w-full min-h-screen px-2 py-20 pt-28 relative flex items-center overflow-hidden"
         style={{
-          background: "linear-gradient(135deg, #003459 0%, #0A192F 100%)",
+          background: palette.background,
         }}
       >
         <CountdownDrawer/>
@@ -175,9 +175,7 @@ const MemberDirectory: React.FC = () => {
                 ></iframe>
 
                 {/* Polaroid caption strip */}
-                <div className="absolute bottom-0 left-0 right-0 h-5 bg-white flex items-center justify-center">
-                  <span className="text-xs text-gray-500 italic">🎥 LaConfe30</span>
-                </div>
+
               </div>
             </div>
               <div className="space-y-6">
@@ -192,7 +190,7 @@ const MemberDirectory: React.FC = () => {
                 </h1>
                 <p
                   className="text-xl leading-relaxed font-medium text-center"
-                  style={{ color: palette.white }}
+                  style={{ color: palette.textSecondary }}
                 >
                   {t("experienceBelizeDesc2")}
                 </p>
