@@ -1,14 +1,23 @@
 "use client";
 import { useState, useEffect } from "react";
-import { palette } from "@/lib/palette";
-import { Timer, X } from "lucide-react"; // lucide icons
+import { X } from "lucide-react";
 import { useTranslation } from "@/utils/useTranslation";
 
 const TARGET_DATE = new Date("2025-11-28T19:00:00-06:00").getTime();
 
+const palette = {
+  primary: "#FF6B6B",
+  cardBg: "#FFFFFF",
+  middayDark: "#2C3E50",
+  midday: "#3498DB",
+  hobbyBg: "#F8F9FA",
+  cardBorder: "#E1E8ED",
+  textSecondary: "#7F8C8D",
+};
+
 export default function CountdownDrawer() {
-  const [isOpen, setIsOpen] = useState(true); // default: ON
-  const { t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(true);
+    const { t } = useTranslation();
 
   const [timeLeft, setTimeLeft] = useState({
     days: "00",
@@ -45,84 +54,120 @@ export default function CountdownDrawer() {
 
   return (
     <>
-      {/* Toggle Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="
-          fixed z-50 p-3 shadow-md rounded-xl transition-all 
-          right-4 bottom-4 sm:top-4 sm:right-4 sm:bottom-auto
-        "
-        style={{
-          backgroundColor: palette.primary,
-          color: palette.white,
-        }}
-      >
-        {isOpen ? <X size={20} /> : <Timer size={20} />}
-      </button>
+      {/* Toggle Button - only shows when closed */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed top-20 right-4 z-50 p-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+          style={{
+            backgroundColor: palette.primary,
+            color: "white",
+          }}
+          aria-label="Show countdown"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+        </button>
+      )}
 
-      {/* Drawer Container */}
-        <div
+      {/* BANNER */}
+      <div
         className={`
-            fixed z-40 w-[40%] sm:w-[28rem] 
-            transition-transform duration-300 shadow-xl p-6
-            
-            /* MOBILE: slide in from right */
-            right-0 top-16 sm:top-0 sm:left-1/2 sm:-translate-x-1/2
-            h-auto sm:h-auto rounded-l-xl sm:rounded-none
-
-            /* Slide open/close */
-            ${isOpen
-            ? "translate-x-0 sm:translate-y-0"
-            : "translate-x-full sm:-translate-y-full"}
+          fixed z-40 w-full left-0 
+          transition-all duration-500 ease-in-out
+          ${isOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}
         `}
         style={{
-            backgroundColor: palette.cardBg,
-            borderBottom: `3px solid ${palette.primary}`,
-            borderLeft: "none",
-            borderRight: "none",
+          top: "5rem",
+          borderBottom: `2px solid ${palette.primary}`,
+          padding: "0.75rem 1rem",
+          backgroundColor: palette.cardBg,
+          backgroundImage: `
+            radial-gradient(circle at 15% 25%, rgba(52, 152, 219, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 85% 35%, rgba(255, 107, 107, 0.06) 0%, transparent 50%),
+            radial-gradient(circle at 50% 85%, rgba(155, 89, 182, 0.05) 0%, transparent 50%),
+            linear-gradient(135deg, rgba(255,255,255,0.9), rgba(248,249,250,0.95))
+          `,
+          boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
         }}
-        >
-        {/* Title */}
-        <h2
-          className="text-2xl font-bold mb-4 text-center"
-          style={{ color: palette.middayDark }}
-        >
-          {t('countdown')}
-        </h2>
+      >
+        <div className="max-w-4xl mx-auto relative">
+          {/* Close Button */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute -top-1 right-0 p-1.5 rounded-full hover:bg-gray-100 transition-colors duration-200"
+            style={{ color: palette.textSecondary }}
+            aria-label="Close countdown"
+          >
+            <X size={18} />
+          </button>
 
-        {/* Timer Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-6">
-          {[
-            { label: t('days'), value: timeLeft.days },
-            { label: t('hours'), value: timeLeft.hours },
-            { label: t('minutes'), value: timeLeft.minutes },
-            { label: t('seconds'), value: timeLeft.seconds },
-          ].map((item, idx) => (
-            <div
-              key={idx}
-              className="flex flex-col items-center justify-center p-4 rounded-xl shadow"
-              style={{
-                backgroundColor: palette.hobbyBg,
-                border: `1px solid ${palette.cardBorder}`,
-              }}
+          <div className="text-center pr-8">
+            {/* Title - smaller on mobile */}
+            <h2
+              className="font-bold mb-2 text-base sm:text-lg md:text-xl"
+              style={{ color: palette.middayDark }}
             >
-              <span
-                className="text-3xl font-bold"
-                style={{ color: palette.midday }}
-              >
-                {item.value}
-              </span>
-              <span
-                className="text-sm font-medium mt-1"
-                style={{ color: palette.textSecondary }}
-              >
-                {item.label}
-              </span>
-            </div>
-          ))}
-        </div>
+              {t("countdown")}
+            </h2>
 
+            {/* Countdown Boxes */}
+            <div className="flex justify-center  gap-2 sm:gap-3 md:gap-4">
+              {[
+        { label: t("days"), value: timeLeft.days },
+        { label: t("hours"), value: timeLeft.hours },
+        { label: t("minutes"), value: timeLeft.minutes },
+        { label: t("seconds"), value: timeLeft.seconds },
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex flex-col items-center justify-center rounded-lg sm:rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200"
+                  style={{
+                    minWidth: "52px",
+                    width: "52px",
+                    height: "52px",
+                    backgroundColor: palette.hobbyBg,
+                    border: `1px solid ${palette.cardBorder}`,
+                  }}
+                >
+                  <span
+                    className="font-bold text-xl sm:text-2xl leading-none"
+                    style={{ color: palette.midday }}
+                  >
+                    {item.value}
+                  </span>
+                  <span
+                    className="text-[10px] sm:text-xs font-medium mt-1"
+                    style={{ color: palette.textSecondary }}
+                  >
+                    {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes sparkleMove {
+          0%, 100% {
+            background-position: 0% 0%, 100% 0%, 50% 100%;
+          }
+          50% {
+            background-position: 100% 100%, 0% 100%, 50% 0%;
+          }
+        }
+      `}</style>
     </>
   );
 }

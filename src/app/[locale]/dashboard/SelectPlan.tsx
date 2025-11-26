@@ -172,59 +172,60 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
   };
 
   const handlePurchase = async (plan: Plan) => {
-    if (!sessionData?.email || !sessionData.firstName) {
-      alert("Missing user session data");
-      return;
-    }
+    alert(t('preconfeComingSoon'))
+    // if (!sessionData?.email || !sessionData.firstName) {
+    //   alert("Missing user session data");
+    //   return;
+    // }
 
-    setIsProcessing(true);
-    setMessage(null);
+    // setIsProcessing(true);
+    // setMessage(null);
 
-    try {
-      const discountedAmount = await calculateFinalAmount(plan);
+    // try {
+    //   const discountedAmount = await calculateFinalAmount(plan);
 
-      const payload = {
-        amount: Math.round(discountedAmount * 100) * 2 / plan.installments,
-        // amount: 1 * 100 * 2,
-        description: `Belize 2026 Conference Registration - Payment 1`,
-        returnUrl: process.env.NEXT_PUBLIC_RETURN_URL || "",
-        orderNumber: uuidv4(),
-        clientId: sessionData.id,
-        email: sessionData.email,
-        planId: plan.id,
-        status: "-1",
-        paymentNumber: "1",
-        fullName: `${sessionData.firstName} ${sessionData.lastName ?? ""}`.trim(),
-        dynamicCallbackUrl: process.env.NEXT_PUBLIC_CALLBACK_URL || "",
-        installments: plan.installments,
-        promoCode: promoApplied ? promoCode : null,
-        selectedRoom: selectedRoom,
-        locale: locale,
-      };
+    //   const payload = {
+    //     amount: Math.round(discountedAmount * 100) * 2 / plan.installments,
+    //     // amount: 1 * 100 * 2,
+    //     description: `Belize 2026 Conference Registration - Payment 1`,
+    //     returnUrl: process.env.NEXT_PUBLIC_RETURN_URL || "",
+    //     orderNumber: uuidv4(),
+    //     clientId: sessionData.id,
+    //     email: sessionData.email,
+    //     planId: plan.id,
+    //     status: "-1",
+    //     paymentNumber: "1",
+    //     fullName: `${sessionData.firstName} ${sessionData.lastName ?? ""}`.trim(),
+    //     dynamicCallbackUrl: process.env.NEXT_PUBLIC_CALLBACK_URL || "",
+    //     installments: plan.installments,
+    //     promoCode: promoApplied ? promoCode : null,
+    //     selectedRoom: selectedRoom,
+    //     locale: locale,
+    //   };
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    //   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/register`, {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(payload),
+    //   });
 
-      const data = await res.json();
-      console.log('Form URL' + data.bankResponse.formUrl)
+    //   const data = await res.json();
+    //   console.log('Form URL' + data.bankResponse.formUrl)
 
-      if (data.bankResponse?.formUrl) {
-        window.location.href = data.bankResponse.formUrl;
-      } else if (data.bankResponse?.errorMessage){
-        alert("Error " + data.bankResponse?.errorCode + ": " + data.bankResponse?.errorMessage);
-      }
-      else {
-        alert("Payment request sent, but no redirect URL received.");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Payment error occurred.");
-    } finally {
-      setIsProcessing(false);
-    }
+    //   if (data.bankResponse?.formUrl) {
+    //     window.location.href = data.bankResponse.formUrl;
+    //   } else if (data.bankResponse?.errorMessage){
+    //     alert("Error " + data.bankResponse?.errorCode + ": " + data.bankResponse?.errorMessage);
+    //   }
+    //   else {
+    //     alert("Payment request sent, but no redirect URL received.");
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    //   alert("Payment error occurred.");
+    // } finally {
+    //   setIsProcessing(false);
+    // }
   };
 
   useEffect(() => {

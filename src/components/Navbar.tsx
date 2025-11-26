@@ -69,7 +69,7 @@ const Navbar: React.FC<NavbarProps> = ({
   return (
     <nav
       ref={headerRef}
-      className="w-full px-4 py-4 fixed top-0 z-20 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300"
+      className="w-full px-4 py-4 fixed top-0 z-50 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300"
       style={{ 
         backgroundColor: `${palette.hobbyBg}dd`, // Added transparency for glass effect
         borderBottomColor: 'rgba(255, 255, 255, 0.1)'
