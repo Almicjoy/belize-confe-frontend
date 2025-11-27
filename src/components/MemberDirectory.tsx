@@ -232,18 +232,15 @@ const MemberDirectory: React.FC = () => {
             </div>
 
             {/* Logo and Mobile Video */}
-            <div className="relative lg:col-span-1 flex flex-col items-center gap-6">
-              <video
-                src="/logo-animation.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-100 h-100 object-contain"
-              />
+<div className="relative lg:col-span-1 flex flex-col items-center gap-6">
+  <img
+    src="/logo.png"
+    alt="Logo"
+    className="w-100 h-100 object-contain"
+  />
 
-              {/* Show video BELOW logo only on small screens */}
-            </div>
+  {/* Show video BELOW logo only on small screens */}
+</div>
 
           </div>
         </div>
