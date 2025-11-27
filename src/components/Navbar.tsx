@@ -88,8 +88,9 @@ const Navbar: React.FC<NavbarProps> = ({
           >
             {t("laconfe")}
           </span>
-          <LanguageSwitcher />
+          
         </div>
+        <LanguageSwitcher />
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
