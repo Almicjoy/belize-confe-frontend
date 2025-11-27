@@ -4,7 +4,7 @@
 import type { ReactNode } from "react";
 import SessionWrapper from "./SessionWrapper";
 import "../globals.css";
-import { Analytics } from "@vercel/analytics/next"
+
 
 interface LocaleLayoutProps {
   children: ReactNode;
@@ -17,7 +17,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   return (
     
     <main lang={locale}>
-      <Analytics/>
+      
       {/* <SessionWrapper>{children}</SessionWrapper> */}
       {children}
       <div id="modal-root"></div>

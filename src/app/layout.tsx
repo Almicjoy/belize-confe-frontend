@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import { useTranslation } from "@/utils/useTranslation";
 import SessionWrapper from "./[locale]/SessionWrapper";
 import { ScrollProvider, useScrollRefs } from "@/utils/ScrollContext";
+import { Analytics } from "@vercel/analytics/next"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const headerRef = useRef<HTMLElement>(null);
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ScrollNav />
             <main>
               {children}
+              <Analytics/>
               <div id="modal-root"></div>
             </main>
           </ScrollProvider>
