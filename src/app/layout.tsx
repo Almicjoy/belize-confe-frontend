@@ -7,6 +7,7 @@ import { useTranslation } from "@/utils/useTranslation";
 import SessionWrapper from "./[locale]/SessionWrapper";
 import { ScrollProvider, useScrollRefs } from "@/utils/ScrollContext";
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const headerRef = useRef<HTMLElement>(null);
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main>
               {children}
               <Analytics/>
+              <SpeedInsights />
               <div id="modal-root"></div>
             </main>
           </ScrollProvider>
