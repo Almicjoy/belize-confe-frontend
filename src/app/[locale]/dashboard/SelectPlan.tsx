@@ -317,8 +317,17 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
                     <h3 className="text-lg font-bold mb-1" style={{ color: palette.text }}>
                       {room.name}
                     </h3>
-                    <div className="text-2xl font-bold mb-1" style={{ color: palette.primary }}>
-                      ${Number(roomPrice[room.id]).toFixed(2)} {t('perPerson')}
+                    <div className="flex flex-col mb-1">
+                      <span 
+                        className="text-2xl font-bold" 
+                        style={{ color: palette.primary }}
+                      >
+                        ${Number(roomPrice[room.id]).toFixed(0)} USD
+                      </span>
+
+                      <span className="text-sm font-medium" style={{ color: palette.primary }}>
+                        {t('perPerson')}
+                      </span>
                     </div>
                     <div className="flex items-center space-x-1 px-3 py-1 rounded-full"
                         style={{ backgroundColor: palette.hobbyBg }}>

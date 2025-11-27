@@ -178,7 +178,7 @@ const Accommodations: React.FC = () => {
                       {price && (
                         <div className="flex flex-col items-end">
                           <span className="text-4xl font-bold" style={{ color: palette.primary }}>
-                            ${price.toLocaleString()}
+                            ${price.toLocaleString()} USD
                           </span>
                           <span className="text-xl" style={{ color: palette.primary }}>
                             {t("perPerson")}
