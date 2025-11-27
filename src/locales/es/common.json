@@ -254,5 +254,8 @@
     "days": "Dias",
     "hours": "Horas",
     "minutes": "Minutos",
-    "seconds": "Segundos"
+    "seconds": "Segundos",
+    "phoneNumber": "Número de Teléfono",
+    "invalidPhone": "Número de teléfono inválido",
+    "enterPhone": "Ingrese su número de teléfono"
 }

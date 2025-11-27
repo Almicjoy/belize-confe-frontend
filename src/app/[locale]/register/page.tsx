@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/utils/useTranslation";
 
-import { Eye, EyeOff, User, Mail, Lock, Calendar, Globe, Building, ArrowRight, Sparkles, AlertCircle, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, User, Mail, Lock, Calendar, Globe, Building, ArrowRight, Sparkles, AlertCircle, CheckCircle, Phone } from 'lucide-react';
 
 
 export default function RegisterPage({
@@ -30,11 +30,23 @@ export default function RegisterPage({
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [countryCode, setCountryCode] = useState("");
+  const [phone, setPhone] = useState("");
   const { locale } = React.use(params);
 
   const { t } = useTranslation();
 
+  const countryCodes = [
+    { code: "+501", country: "BZ" },
+    { code: "+502", country: "GT" },
+    { code: "+503", country: "SV" },
+    { code: "+504", country: "HN" },
+    { code: "+505", country: "NI" },
+    { code: "+506", country: "CR" },
+    { code: "+507", country: "PA" },
+  ];
   const router = useRouter();
+
 
   useEffect(() => {
     async function fetchData() {
@@ -66,6 +78,8 @@ export default function RegisterPage({
         firstName,
         lastName,
         email, 
+        countryCode,
+        phone,
         country,
         clubName,
         birthday,
@@ -85,6 +99,10 @@ export default function RegisterPage({
     }
 
     setIsLoading(false);
+  };
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    setPhone(value);
   };
 
   
@@ -228,6 +246,55 @@ export default function RegisterPage({
                   />
                 </div>
               </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-800">
+                  {t('phoneNumber')}
+                </label>
+                <div className="relative flex">
+                  {/* Country Code Selector */}
+                  <div className="relative">
+                    <select
+                      value={countryCode}
+                      onChange={(e) => setCountryCode(e.target.value)}
+                      required
+                      className="h-full pl-4 pr-8 py-4 rounded-l-2xl border-r-0 border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm appearance-none cursor-pointer bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+                        backgroundPosition: 'right 0.5rem center',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: '1.5em 1.5em',
+                      }}
+                    >
+                      <option value="">Select code</option> {/* placeholder */}
+                      {countryCodes.map((item) => (
+                        <option key={item.code} value={item.code}>
+                          {item.code} ({item.country})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Phone Number Input */}
+                  <div className="relative flex-1">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <Phone size={20} className="text-gray-400" />
+                    </div>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      required
+                      className="w-full pl-12 pr-4 py-4 rounded-r-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
+                      placeholder="Enter phone number"
+                    />
+                  </div>
+                </div>
+
+
+
+     
+    </div>
 
               {/* Country and Club Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
