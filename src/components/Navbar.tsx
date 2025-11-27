@@ -81,12 +81,14 @@ const Navbar: React.FC<NavbarProps> = ({
           <div className="w-12 h-12 flex items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110">
             <Image src="/logo.png" alt="Logo" width={48} height={48} className="drop-shadow-sm" />
           </div>
+          
           <span 
             className="text-xl font-bold tracking-tight transition-colors duration-300 group-hover:opacity-80" 
             style={{ color: palette.primary }}
           >
             {t("laconfe")}
           </span>
+          <LanguageSwitcher />
         </div>
 
         {/* Desktop Menu */}
@@ -126,18 +128,19 @@ const Navbar: React.FC<NavbarProps> = ({
               />
 
               <AccountMenu locale={locale} />
-              <LanguageSwitcher />
+              {/* <LanguageSwitcher /> */}
             </>
           ) : (
             // Show only AccountMenu and LanguageSwitcher when logged in
             <>
               <AccountMenu locale={locale} />
-              <LanguageSwitcher />
+              {/* <LanguageSwitcher /> */}
             </>
           )}
         </div>
 
         {/* Mobile Toggle */}
+        
         <button
           className="md:hidden p-3 rounded-xl transition-all duration-300 hover:bg-white/10 active:scale-95"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -239,7 +242,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
                     <div className="pb-4 space-x-4 ml-4">
                       <AccountMenu locale={locale} />
-                      <LanguageSwitcher  />
+                      {/* <LanguageSwitcher  /> */}
                     </div>
 
                   </>
@@ -250,7 +253,7 @@ const Navbar: React.FC<NavbarProps> = ({
                       <AccountMenu locale={locale} />
                     </div>
                     <div className="pt-4 border-t border-white/10">
-                      <LanguageSwitcher />
+                      
                     </div>
                   </>
                 )}
