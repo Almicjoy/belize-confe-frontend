@@ -51,6 +51,12 @@ interface Promo {
   date_active: string;
 }
 
+interface PromoReservation {
+  reservationId: string;
+  discount: number;
+  expiresAt: string;
+}
+
 interface SelectPlanProps {
   sessionData?: SessionData;
 }
@@ -62,6 +68,8 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
   const [promoStatus, setPromoStatus] = useState<"success" | "error" | null>(null);
   const [promoApplied, setPromoApplied] = useState<boolean>(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [promoReservation, setPromoReservation] = useState<PromoReservation | null>(null);
+  const [reservationExpired, setReservationExpired] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [userState, setUserState] = useState({
     hasSelectedPlan: sessionData?.hasSelectedPlan ?? false,
@@ -122,59 +130,161 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
     }
   };
 
-  const calculateFinalAmount = async (plan: Plan) => {
-    let amount = Number(selectedRoomPrice);
+  // ==========================================
+  // NEW: Reserve Promo (atomic)
+  // ==========================================
+  const reservePromo = async (code: string): Promise<PromoReservation | null> => {
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/promo/reserve`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: code.toUpperCase(),
+          userId: sessionData?.id,
+          roomType: selectedRoom
+        })
+      });
 
-    if (promoApplied && promoCode.trim()) {
-      const promo = await getValidPromo(promoCode);
-      if (promo) {
-        amount = amount * (1 - promo.discount);
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Reservation failed:", errorData);
+        return null;
       }
-    }
 
-    return amount;
+      const data = await response.json();
+      return {
+        reservationId: data.reservationId,
+        discount: data.promo.discount,
+        expiresAt: data.promo.expiresAt
+      };
+    } catch (err) {
+      console.error("Error reserving promo:", err);
+      return null;
+    }
   };
 
-  // NEW: Calculate promo discount when promo is applied
-  useEffect(() => {
-    const calculateDiscount = async () => {
-      if (promoApplied && promoCode.trim() && selectedRoomPrice) {
-        const promo = await getValidPromo(promoCode);
-        if (promo) {
-          const discount = Number(selectedRoomPrice) * promo.discount;
-          setPromoDiscount(discount);
-        } else {
-          setPromoDiscount(0);
-        }
-      } else {
-        setPromoDiscount(0);
-      }
-    };
-
-    calculateDiscount();
-  }, [promoApplied, promoCode, selectedRoomPrice, selectedPlan]);
-
+  // ==========================================
+  // UPDATED: Apply Promo Handler
+  // ==========================================
   const handleApplyPromo = async () => {
     if (!promoCode.trim()) {
       setPromoStatus("error");
       return;
     }
 
-    const promo = await getValidPromo(promoCode);
-    if (!promo) {
-      setPromoStatus("error");
-      setPromoApplied(false);
+    if (!selectedRoom) {
+      alert(t('pleaseSelectRoom') || "Please select a room first");
       return;
     }
 
-    setPromoApplied(true);
-    setPromoStatus("success");
+    setIsProcessing(true);
+    setPromoStatus(null);
+
+    try {
+      // First validate the promo exists and is valid
+      const promo = await getValidPromo(promoCode);
+      
+      if (!promo) {
+        setPromoStatus("error");
+        setPromoApplied(false);
+        setIsProcessing(false);
+        return;
+      }
+
+      // Now reserve it atomically
+      const reservation = await reservePromo(promoCode);
+
+      if (!reservation) {
+        setPromoStatus("error");
+        setPromoApplied(false);
+        setIsProcessing(false);
+        return;
+      }
+
+      // Success - store reservation
+      setPromoReservation(reservation);
+      setPromoApplied(true);
+      setPromoStatus("success");
+      setReservationExpired(false);
+
+      // Start countdown to expiration
+      startExpirationTimer(reservation.expiresAt);
+
+    } catch (err) {
+      console.error("Error applying promo:", err);
+      setPromoStatus("error");
+      setPromoApplied(false);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
+  // ==========================================
+  // NEW: Expiration Timer
+  // ==========================================
+  const startExpirationTimer = (expiresAt: string) => {
+    const expiryTime = new Date(expiresAt).getTime();
+    
+    const checkExpiration = () => {
+      const now = Date.now();
+      const timeLeft = expiryTime - now;
+
+      if (timeLeft <= 0) {
+        setReservationExpired(true);
+        setPromoApplied(false);
+        setPromoReservation(null);
+        setPromoStatus("error");
+        setMessage({
+          type: "error",
+          text: t('promoExpired') || "Promo reservation expired. Please apply again."
+        });
+      }
+    };
+
+    // Check every 10 seconds
+    const interval = setInterval(checkExpiration, 10000);
+    
+    // Cleanup on unmount
+    return () => clearInterval(interval);
+  };
+
+  // ==========================================
+  // UPDATED: Calculate Final Amount
+  // ==========================================
+  const calculateFinalAmount = (plan: Plan) => {
+    let amount = Number(selectedRoomPrice);
+    
+    if (promoApplied && promoReservation) {
+      amount = amount * (1 - promoReservation.discount);
+    }
+    
+    return amount;
+  };
+
+  // ==========================================
+  // UPDATED: Calculate Promo Discount
+  // ==========================================
+  useEffect(() => {
+    if (promoApplied && promoReservation && selectedRoomPrice) {
+      const discount = Number(selectedRoomPrice) * promoReservation.discount;
+      setPromoDiscount(discount);
+    } else {
+      setPromoDiscount(0);
+    }
+  }, [promoApplied, promoReservation, selectedRoomPrice, selectedPlan]);
+
+  // ==========================================
+  // UPDATED: Purchase Handler
+  // ==========================================
   const handlePurchase = async (plan: Plan) => {
-    // alert(t('preconfeComingSoon'))
     if (!sessionData?.email || !sessionData.firstName) {
       alert("Missing user session data");
+      return;
+    }
+
+    if (reservationExpired) {
+      alert(t('promoExpiredReapply') || "Your promo reservation expired. Please reapply the code.");
       return;
     }
 
@@ -182,11 +292,11 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
     setMessage(null);
 
     try {
-      const discountedAmount = await calculateFinalAmount(plan);
+      const discountedAmount = calculateFinalAmount(plan);
+      console.log(promoReservation?.reservationId)
 
       const payload = {
         amount: Math.round(discountedAmount * 100) * 2 / plan.installments,
-        // amount: 1 * 100 * 2,
         description: `Belize 2026 Conference Registration - Payment 1`,
         returnUrl: process.env.NEXT_PUBLIC_RETURN_URL || "",
         orderNumber: uuidv4(),
@@ -198,6 +308,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
         fullName: `${sessionData.firstName} ${sessionData.lastName ?? ""}`.trim(),
         dynamicCallbackUrl: process.env.NEXT_PUBLIC_CALLBACK_URL || "",
         installments: plan.installments,
+        reservationId: promoReservation?.reservationId,
         promoCode: promoApplied ? promoCode : null,
         selectedRoom: selectedRoom,
         locale: locale,
@@ -210,14 +321,12 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
       });
 
       const data = await res.json();
-      console.log('Form URL' + data.bankResponse.formUrl)
 
       if (data.bankResponse?.formUrl) {
         window.location.href = data.bankResponse.formUrl;
-      } else if (data.bankResponse?.errorMessage){
+      } else if (data.bankResponse?.errorMessage) {
         alert("Error " + data.bankResponse?.errorCode + ": " + data.bankResponse?.errorMessage);
-      }
-      else {
+      } else {
         alert("Payment request sent, but no redirect URL received.");
       }
     } catch (error) {
@@ -227,7 +336,6 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
       setIsProcessing(false);
     }
   };
-
   useEffect(() => {
     const fetchAvailability = async () => {
       try {

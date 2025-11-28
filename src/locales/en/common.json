@@ -257,5 +257,6 @@
     "seconds": "Seconds",
     "phoneNumber": "Phone Number",
     "invalidPhone": "Invalid Phone Number",
-    "enterPhone": "Enter Phone Number"
+    "enterPhone": "Enter Phone Number",
+    "promoExpired": "Promo reservation expired. Please apply again."
 }

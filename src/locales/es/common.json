@@ -257,5 +257,6 @@
     "seconds": "Segundos",
     "phoneNumber": "Número de Teléfono",
     "invalidPhone": "Número de teléfono inválido",
-    "enterPhone": "Ingrese su número de teléfono"
+    "enterPhone": "Ingrese su número de teléfono",
+    "promoExpired": "La reserva del cupón ha expirado. Por favor, aplique nuevamente."
 }
