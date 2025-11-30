@@ -32,8 +32,7 @@ const ShowcasePlans: React.FC<ShowcasePlansProps> = ({ locale = "en" }) => {
   };
 
   const formatDate = (dateString: string) => {
-    const [year, month, day] = dateString.split("-").map(Number);
-    const date = new Date(year, month - 1, day); // months are 0-based
+    const date = new Date(dateString); // JS handles ISO strings
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
