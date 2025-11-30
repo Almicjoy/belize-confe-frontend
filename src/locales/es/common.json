@@ -54,7 +54,7 @@
             "savings": "Mejor Valor",
             "popular": false,
             "features": ["Acceso inmediato", "Pago único"],
-            "cutoff": "2026-02-28"
+            "cutoff": "2026-03-01T00:00:00-06:00"
         },
         {
             "id": 2,
@@ -65,7 +65,7 @@
             "savings": null,
             "popular": false,
             "features": ["Dividido en 2 pagos", "Intervalos de 30 días"],
-            "cutoff": "2026-01-31"
+            "cutoff": "2026-02-01T00:00:00-06:00"
         },
         {
             "id": 3,
@@ -76,7 +76,7 @@
             "savings": null,
             "popular": false,
             "features": ["Pagos flexibles", "Intervalos de 30 días"],
-            "cutoff": "2025-12-31"
+            "cutoff": "2026-01-01T00:00:00-06:00"
         },
         {
             "id": 4,
@@ -87,7 +87,7 @@
             "savings": "Más Flexible",
             "popular": false,
             "features": ["Pago más bajo", "Intervalos de 30 días"],
-            "cutoff": "2025-11-30"
+            "cutoff": "2025-12-01T00:00:00-06:00"
         }
     ],
     "paymentExtras": "Pagos seguros • Acceso completo a la conferencia",
