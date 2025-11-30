@@ -143,7 +143,7 @@ const MemberDirectory: React.FC = () => {
           background: palette.background,
         }}
       >
-        <CountdownDrawer/>
+        {/*<CountdownDrawer/>*/}
         {/* Background Video - only visible on large screens */}
         <div className="hidden lg:block absolute top-0 left-0 w-full h-full">
           <iframe
