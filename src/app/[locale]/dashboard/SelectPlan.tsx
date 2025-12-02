@@ -296,7 +296,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
       console.log(promoReservation?.reservationId)
 
       const payload = {
-        amount: Math.round(((discountedAmount * 100) * 2) / plan.installments),
+        amount: Number((((discountedAmount * 100) * 2) / plan.installments).toFixed(2)),
         description: `Belize 2026 Conference Registration - Payment 1`,
         returnUrl: process.env.NEXT_PUBLIC_RETURN_URL || "",
         orderNumber: uuidv4(),

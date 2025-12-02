@@ -161,7 +161,7 @@
     "lastName": "Apellido",
     "enterLastName": "Ingresa tu apellido",
     "country": "País",
-    "enterCountry": "Selecciona tu país",
+    "selectCountry": "Selecciona tu país",
     "club": "Nombre del Club",
     "selectClub": "Selecciona tu club",
     "dob": "Fecha de Nacimiento",
@@ -258,5 +258,10 @@
     "phoneNumber": "Número de Teléfono",
     "invalidPhone": "Número de teléfono inválido",
     "enterPhone": "Ingrese su número de teléfono",
-    "promoExpired": "La reserva del cupón ha expirado. Por favor, aplique nuevamente."
+    "promoExpired": "La reserva del cupón ha expirado. Por favor, aplique nuevamente.",
+    "other": "Otro (Ingresar manualmente)",
+    "noClubsFound": "No se encontraron clubes. Selecciona 'Otro' para ingresarlo manualmente.",
+    "searchClub": "Buscar clubes...",
+    "enterClub": "Ingresa tu club",
+    "enterCountry": "Ingresa tu país"
 }

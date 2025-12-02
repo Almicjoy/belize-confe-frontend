@@ -234,7 +234,7 @@ const MemberDirectory: React.FC = () => {
             {/* Logo and Mobile Video */}
 <div className="relative lg:col-span-1 flex flex-col items-center gap-6">
   <img
-    src="/logo_christmas.jpeg"
+    src="/logo_christmas.png"
     alt="Logo"
     className="w-100 h-100 object-contain"
   />
@@ -284,7 +284,7 @@ const MemberDirectory: React.FC = () => {
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: palette.primary }}>
                 <Image
-                    src="/logo_christmas.jpeg"
+                    src="/logo_christmas.png"
                     alt="Logo"
                     width={60}
                     height={60}

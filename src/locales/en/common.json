@@ -161,7 +161,7 @@
     "lastName": "Last Name",
     "enterLastName": "Enter your last name",
     "country": "Country",
-    "enterCountry": "Select your country",
+    "selectCountry": "Select your country",
     "club": "Club Name",
     "selectClub": "Select your club",
     "dob": "Date of Birth",
@@ -258,5 +258,10 @@
     "phoneNumber": "Phone Number",
     "invalidPhone": "Invalid Phone Number",
     "enterPhone": "Enter Phone Number",
-    "promoExpired": "Promo reservation expired. Please apply again."
+    "promoExpired": "Promo reservation expired. Please apply again.",
+    "other": "Other (Enter manually)",
+    "noClubsFound": "No clubs found. Select 'Other' to enter manually.",
+    "searchClub": "Search clubs...",
+    "enterClub": "Enter your club",
+    "enterCountry": "Enter your country"
 }

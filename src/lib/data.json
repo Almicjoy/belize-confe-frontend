@@ -6,9 +6,11 @@
     "El Salvador",
     "Nicaragua",
     "Costa Rica",
-    "Panama"
+    "Panama",
+    "Other"
   ],
   "clubs": [
+    "Other",
     "Rotaract Club of Belize City",
     "Rotaract Club of Orange Walk",
     "Rotaract Club of Corozal",

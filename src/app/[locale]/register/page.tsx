@@ -13,15 +13,21 @@ export default function RegisterPage({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>; // 👈 notice params is a Promise now
+  params: Promise<{ locale: string }>;
 }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [country, setCountry] = useState("");
+  const [customCountry, setCustomCountry] = useState("");
   const [clubName, setClubName] = useState("");
+  const [customClub, setCustomClub] = useState("");
   const [countries, setCountries] = useState<string[]>([]);
   const [clubs, setClubs] = useState<string[]>([]);
+  const [filteredClubs, setFilteredClubs] = useState<string[]>([]);
+  const [clubSearch, setClubSearch] = useState("");
+  const [showClubDropdown, setShowClubDropdown] = useState(false);
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [birthday, setBirthday] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -36,27 +42,52 @@ export default function RegisterPage({
 
   const { t } = useTranslation();
 
-  const countryCodes = [
-    { code: "+501", country: "BZ" },
-    { code: "+502", country: "GT" },
-    { code: "+503", country: "SV" },
-    { code: "+504", country: "HN" },
-    { code: "+505", country: "NI" },
-    { code: "+506", country: "CR" },
-    { code: "+507", country: "PA" },
-  ];
   const router = useRouter();
 
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      
+      // Close country dropdown if click is outside
+      if (showCountryDropdown && !target.closest('.country-dropdown-container')) {
+        setShowCountryDropdown(false);
+      }
+      
+      // Close club dropdown if click is outside
+      if (showClubDropdown && !target.closest('.club-dropdown-container')) {
+        setShowClubDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showCountryDropdown, showClubDropdown]);
 
   useEffect(() => {
     async function fetchData() {
-    const res = await fetch("/api/data");
-    const data = await res.json();
-    setCountries(data.countries);
-    setClubs(data.clubs);
+      const res = await fetch("/api/data");
+      const data = await res.json();
+      setCountries(data.countries);
+      setClubs(data.clubs);
+      setFilteredClubs(data.clubs);
     }
     fetchData();
   }, []);
+
+  // Filter clubs based on search
+  useEffect(() => {
+    if (clubSearch === "") {
+      setFilteredClubs(clubs);
+    } else {
+      const filtered = clubs.filter(club =>
+        club.toLowerCase().includes(clubSearch.toLowerCase())
+      );
+      setFilteredClubs(filtered);
+    }
+  }, [clubSearch, clubs]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,6 +102,10 @@ export default function RegisterPage({
       return;
     }
 
+    // Determine final country and club values
+    const finalCountry = country === "Other" ? customCountry : country;
+    const finalClub = clubName === "Other" ? customClub : clubName;
+
     const res = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -80,8 +115,8 @@ export default function RegisterPage({
         email, 
         countryCode,
         phone,
-        country,
-        clubName,
+        country: finalCountry,
+        clubName: finalClub,
         birthday,
         password,
         locale
@@ -91,7 +126,6 @@ export default function RegisterPage({
     const data = await res.json();
 
     if (res.ok) {
-      // ✅ Redirect to login with success message
       router.push(`/${locale}/login?message=${encodeURIComponent(t('registrationSuccess'))}`);
     } else {
       setMessage(data.message);
@@ -100,12 +134,33 @@ export default function RegisterPage({
 
     setIsLoading(false);
   };
+
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, '');
     setPhone(value);
   };
 
-  
+  const handleCountryCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9+]/g, '');
+    setCountryCode(value);
+  };
+
+  const handleClubSelect = (club: string) => {
+    setClubName(club);
+    setClubSearch(club);
+    setShowClubDropdown(false);
+    if (club !== "Other") {
+      setCustomClub("");
+    }
+  };
+
+  const handleCountrySelect = (selectedCountry: string) => {
+    setCountry(selectedCountry);
+    setShowCountryDropdown(false);
+    if (selectedCountry !== "Other") {
+      setCustomCountry("");
+    }
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-white mt-20">
@@ -247,32 +302,22 @@ export default function RegisterPage({
                 </div>
               </div>
 
+              {/* Phone Number Field */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-800">
                   {t('phoneNumber')}
                 </label>
-                <div className="relative flex">
-                  {/* Country Code Selector */}
-                  <div className="relative">
-                    <select
+                <div className="relative flex gap-3">
+                  {/* Country Code Input */}
+                  <div className="relative w-24 md:w-32">
+                    <input
+                      type="text"
                       value={countryCode}
-                      onChange={(e) => setCountryCode(e.target.value)}
+                      onChange={handleCountryCodeChange}
                       required
-                      className="h-full pl-4 pr-8 py-4 rounded-l-2xl border-r-0 border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm appearance-none cursor-pointer bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
-                        backgroundPosition: 'right 0.5rem center',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundSize: '1.5em 1.5em',
-                      }}
-                    >
-                      <option value="">Select code</option> {/* placeholder */}
-                      {countryCodes.map((item) => (
-                        <option key={item.code} value={item.code}>
-                          {item.code} ({item.country})
-                        </option>
-                      ))}
-                    </select>
+                      className="w-full px-2 md:px-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
+                      placeholder="+501"
+                    />
                   </div>
 
                   {/* Phone Number Input */}
@@ -283,18 +328,14 @@ export default function RegisterPage({
                     <input
                       type="tel"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={handlePhoneChange}
                       required
-                      className="w-full pl-12 pr-4 py-4 rounded-r-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
-                      placeholder="Enter phone number"
+                      className="w-full pl-12 pr-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
+                      placeholder={t('enterPhone')}
                     />
                   </div>
                 </div>
-
-
-
-     
-    </div>
+              </div>
 
               {/* Country and Club Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -302,46 +343,123 @@ export default function RegisterPage({
                   <label className="text-sm font-medium text-gray-800">
                     {t('country')}
                   </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <div className="relative country-dropdown-container">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
                       <Globe size={20} className="text-gray-400" />
                     </div>
-                    <select
+                    <input
+                      type="text"
                       value={country}
-                      onChange={(e) => setCountry(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm appearance-none cursor-pointer bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
-                      required
-                    >
-                      <option value="">{t('enterCountry')}</option>
+                      onFocus={() => setShowCountryDropdown(true)}
+                      readOnly
+                      className="w-full pl-12 pr-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400 cursor-pointer"
+                      placeholder={t('selectCountry')}
+                      required={country === ""}
+                    />
+                    
+                    {/* Dropdown Menu */}
+                    {showCountryDropdown && (
+                      <div className="absolute z-20 w-full mt-2 bg-white border border-cyan-200 rounded-2xl shadow-lg max-h-60 overflow-y-auto">
+                        <div
+                          onClick={() => handleCountrySelect("Other")}
+                          className="px-4 py-3 hover:bg-cyan-50 cursor-pointer transition-colors text-sm text-gray-800 font-medium border-b-2 border-cyan-200"
+                        >
+                          {t('other')}
+                        </div>
                         {countries.map((c) => (
-                            <option key={c} value={c}>
+                          <div
+                            key={c}
+                            onClick={() => handleCountrySelect(c)}
+                            className="px-4 py-3 hover:bg-cyan-50 cursor-pointer transition-colors text-sm text-gray-800 border-b border-gray-100 last:border-b-0"
+                          >
                             {c}
-                            </option>
+                          </div>
                         ))}
-                    </select>
+
+                      </div>
+                    )}
                   </div>
+                  
+                  {/* Custom Country Input */}
+                  {country === t('other') && (
+                    <div className="relative mt-2">
+                      <input
+                        type="text"
+                        value={customCountry}
+                        onChange={(e) => setCustomCountry(e.target.value)}
+                        className="w-full px-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
+                        placeholder={t('enterCountry')}
+                        required
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-800">
                     {t('club')}
                   </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <div className="relative club-dropdown-container">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
                       <Building size={20} className="text-gray-400" />
                     </div>
-                    <select
-                      value={clubName}
-                      onChange={(e) => setClubName(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm appearance-none cursor-pointer bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
-                      required
-                    >
-                      <option value="">{t('selectClub')}</option>
-                        {clubs.map((c) => (
-                        <option key={c} value={c}>{c}</option>
-                        ))}
-                    </select>
+                    <input
+                      type="text"
+                      value={clubSearch}
+                      onChange={(e) => {
+                        setClubSearch(e.target.value);
+                        setShowClubDropdown(true);
+                      }}
+                      onFocus={() => setShowClubDropdown(true)}
+                      className="w-full pl-12 pr-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
+                      placeholder={t('searchClub')}
+                      required={clubName === ""}
+                    />
+                    
+                    {/* Dropdown Menu */}
+                    {showClubDropdown && (
+                      <div className="absolute z-20 w-full mt-2 bg-white border border-cyan-200 rounded-2xl shadow-lg max-h-60 overflow-y-auto">
+                        {filteredClubs.length > 0 ? (
+                          <>
+                            <div
+                              onClick={() => handleClubSelect("Other")}
+                              className="px-4 py-3 hover:bg-cyan-50 cursor-pointer transition-colors text-sm text-gray-800 font-medium border-b-2 border-cyan-200"
+                            >
+                              {t('other')}
+                            </div>
+                            {filteredClubs.map((club) => (
+                              <div
+                                key={club}
+                                onClick={() => handleClubSelect(club)}
+                                className="px-4 py-3 hover:bg-cyan-50 cursor-pointer transition-colors text-sm text-gray-800 border-b border-gray-100 last:border-b-0"
+                              >
+                                {club}
+                              </div>
+                            ))}
+
+                          </>
+                        ) : (
+                          <div className="px-4 py-3 text-sm text-gray-500">
+                            {t('noClubsFound')}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
+                  
+                  {/* Custom Club Input */}
+                  {clubName === "Other" && (
+                    <div className="relative mt-2">
+                      <input
+                        type="text"
+                        value={customClub}
+                        onChange={(e) => setCustomClub(e.target.value)}
+                        className="w-full px-4 py-4 rounded-2xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent text-sm bg-cyan-50 border-cyan-200 text-gray-800 focus:ring-blue-400"
+                        placeholder={t('enterClub')}
+                        required
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -464,7 +582,7 @@ export default function RegisterPage({
               <p className="text-gray-600">
                 {t('haveAccount')}{' '}
                 <a 
-                  href={`/${locale}/login`} 
+                  href={`/${locale}/login`}
                   className="font-semibold hover:underline transition-colors duration-200 text-blue-400"
                 >
                   {t('signIn')}
