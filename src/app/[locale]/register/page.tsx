@@ -381,7 +381,7 @@ export default function RegisterPage({
                   </div>
                   
                   {/* Custom Country Input */}
-                  {country === t('other') && (
+                  {country === "Other" && (
                     <div className="relative mt-2">
                       <input
                         type="text"
