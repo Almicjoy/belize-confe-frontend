@@ -72,7 +72,7 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
     try {
      console.log(sessionData)
       const payload = {
-        amount: (price/plan.installments) * 100 * 2, // cents
+        amount: Math.round((price / plan.installments) * 100 * 2), // cents
         description: `Belize 2026 Conference Registration - Payment ${paymentProgress.completed + 1}`,
         returnUrl: process.env.NEXT_PUBLIC_RETURN_URL || "",
         orderNumber: uuidv4(),

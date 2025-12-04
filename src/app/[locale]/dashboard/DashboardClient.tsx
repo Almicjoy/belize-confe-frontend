@@ -73,6 +73,7 @@ const DashboardClient: React.FC = () => {
   const [roomPrice, setRoomPrice] = useState<Record<number, number>>({});
   const [selectedRoomPrice, setSelectedRoomPrice] = useState<number | null>(null);
   const [finalPrice, setFinalPrice] = useState<number | null>(null);
+  const [installmentPrice, setInstallmentPrice] = useState<number | null>(null);
   const [nextPayment, setNextPayment] = useState<null | {
     nextDueDate: string;
     installmentNumber: number;
@@ -105,59 +106,59 @@ const DashboardClient: React.FC = () => {
 
 
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const getValidPromo = async (code: string): Promise<Promo | null> => {
-      try {
-        const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/promo?code=${encodeURIComponent(code)}`;
-        const response = await fetch(url);
+  //   const getValidPromo = async (code: string): Promise<Promo | null> => {
+  //     try {
+  //       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/promo?code=${encodeURIComponent(code)}`;
+  //       const response = await fetch(url);
 
-        if (!response.ok) {
-          // Promo not found or server error
-          return null;
-        }
+  //       if (!response.ok) {
+  //         // Promo not found or server error
+  //         return null;
+  //       }
 
-        const promo: Promo = await response.json();
+  //       const promo: Promo = await response.json();
 
-        const now = new Date();
+  //       const now = new Date();
 
-        // // Check if promo is expired
-        // if (promo.date_active) {
-        //   const activeDate = new Date(promo.date_active);
-        //   if (now > activeDate) {
-        //     return null; // promo expired
-        //   }
-        // }
+  //       // // Check if promo is expired
+  //       // if (promo.date_active) {
+  //       //   const activeDate = new Date(promo.date_active);
+  //       //   if (now > activeDate) {
+  //       //     return null; // promo expired
+  //       //   }
+  //       // }
 
-        // // Check if promo has remaining uses
-        // if (promo.amount <= 0) {
-        //   return null; // no more uses left
-        // }
+  //       // // Check if promo has remaining uses
+  //       // if (promo.amount <= 0) {
+  //       //   return null; // no more uses left
+  //       // }
 
-        return promo;
-      } catch (err) {
-        console.error("Error fetching promo:", err);
-        return null;
-      }
-    };
-    const calculatePrice = async () => {
-      if (!selectedRoom || payments.length === 0) return;
+  //       return promo;
+  //     } catch (err) {
+  //       console.error("Error fetching promo:", err);
+  //       return null;
+  //     }
+  //   };
+  //   const calculatePrice = async () => {
+  //     if (!selectedRoom || payments.length === 0) return;
 
-      let amount = Number(roomPrice[Number(selectedRoom)]);
+  //     let amount = Number(roomPrice[Number(selectedRoom)]);
 
-      const promoCode = payments[0].promoCode?.trim();
-      if (promoCode) {
-        const promo = await getValidPromo(promoCode);
-        if (promo) {
-          amount = amount * (1 - promo.discount); // apply promo discount
-        }
-      }
+  //     const promoCode = payments[0].promoCode?.trim();
+  //     if (promoCode) {
+  //       const promo = await getValidPromo(promoCode);
+  //       if (promo) {
+  //         amount = amount * (1 - promo.discount); // apply promo discount
+  //       }
+  //     }
 
-      setFinalPrice(amount);
-    };
+  //     setFinalPrice(amount);
+  //   };
 
-    calculatePrice();
-  }, [selectedRoom, roomPrice, payments]);
+  //   calculatePrice();
+  // }, [selectedRoom, roomPrice, payments]);
 
   // Populate user state when session is available
   useEffect(() => {
@@ -213,8 +214,19 @@ const DashboardClient: React.FC = () => {
         const planId = successfulPayments[0].planId;
         const room = successfulPayments[0].selectedRoom;
         const totalPaymentsRequired = parseInt(planId);
+
         
         setHasSelectedPlan(true);
+        setFinalPrice(
+            Number(
+              (
+                ((successfulPayments[0].amount / 100) * 2) /
+                Number(successfulPayments[0].planId)
+              ).toFixed(2)
+            )
+          );
+        setInstallmentPrice(successfulPayments[0].amount / 100)
+
         setSelectedPlan(planId);
         setSelectedRoom(room);
         setPaymentProgress({
