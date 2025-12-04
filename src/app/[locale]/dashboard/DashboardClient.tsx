@@ -220,12 +220,13 @@ const DashboardClient: React.FC = () => {
         setFinalPrice(
             Number(
               (
-                ((successfulPayments[0].amount / 100) * 2) /
+                ((successfulPayments[0].amount / 100) / 2) *
                 Number(successfulPayments[0].planId)
               ).toFixed(2)
             )
           );
-        setInstallmentPrice(successfulPayments[0].amount / 100)
+          // setFinalPrice(successfulPayments[0].amount / 100)
+        setInstallmentPrice(successfulPayments[0].amount / 100 )
 
         setSelectedPlan(planId);
         setSelectedRoom(room);
@@ -516,7 +517,7 @@ const DashboardClient: React.FC = () => {
                   )}
                   
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm text-gray-600 bg-white px-3 sm:px-4 py-2 rounded-xl border border-green-100">
-                    <span className="font-medium">{t('totalAmount')}: ${finalPrice}</span>
+                    <span className="font-medium">{t('totalAmount')}: ${finalPrice} USD</span>
                     <span className="text-xs sm:text-sm">{planDetails.installments} {t('installment')}{planDetails.installments > 1 ? 's' : ''}</span>
                   </div>
                   
