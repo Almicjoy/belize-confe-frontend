@@ -216,7 +216,7 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
                     className="text-2xl font-bold"
                     style={{ color: palette.primary }}
                   >
-                    ${Number(price/plan.installments).toFixed(2)}
+                    ${Number(price/plan.installments).toFixed(2)} USD
                   </span>
                 </div>
               </div>
@@ -253,7 +253,7 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
                     {t('processing')}
                   </div>
                 ) : (
-                  `${t('pay')} $${Number(price/plan.installments).toFixed(2)}`
+                  `${t('pay')} $${Number(price/plan.installments).toFixed(2)} USD`
                 )}
               </button>
             </div>
