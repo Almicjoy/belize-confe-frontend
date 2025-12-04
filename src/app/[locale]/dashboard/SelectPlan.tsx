@@ -78,6 +78,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
   const [availabilityMap, setAvailabilityMap] = useState<Record<number, number>>({});
   const [roomPrice, setRoomPrice] = useState<Record<number, number>>({});
   const [selectedRoomPrice, setSelectedRoomPrice] = useState<number | null>(null);
+  const [isDataLoading, setIsDataLoading] = useState<boolean>(true);
   
   // NEW: Store calculated promo discount in state
   const [promoDiscount, setPromoDiscount] = useState<number>(0);
@@ -336,8 +337,10 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
       setIsProcessing(false);
     }
   };
+  
   useEffect(() => {
     const fetchAvailability = async () => {
+      setIsDataLoading(true);
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/rooms`);
         const data = await res.json();
@@ -356,6 +359,8 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
         }
       } catch (err) {
         console.error("Error fetching room availability:", err);
+      } finally {
+        setIsDataLoading(false);
       }
     };
 
@@ -660,7 +665,7 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
 
             {/* Purchase Button */}
             <button
-              disabled={isProcessing}
+              disabled={isProcessing || isDataLoading || !selectedRoom}
               onClick={() => {
                 const plan = plans.find(p => p.id === selectedPlan);
                 if (plan) handlePurchase(plan);
@@ -676,13 +681,14 @@ const SelectPlan: React.FC<SelectPlanProps> = ({ sessionData }) => {
                 flex items-center justify-center gap-2 sm:gap-3 
                 text-white 
                 text-sm sm:text-lg
+                disabled:opacity-50 disabled:cursor-not-allowed
               "
               style={{ 
                 background: `linear-gradient(135deg, ${palette.primary} 0%, ${palette.tertiary} 100%)`,
               }}
             >
               <CreditCard className="w-4 h-4 sm:w-6 sm:h-6" />
-              {isProcessing ? t('loading') : t('purchaseSelectedPlan')}
+              {isDataLoading ? t('loading') : isProcessing ? t('loading') : t('purchaseSelectedPlan')}
             </button>
           </div>
         )}
