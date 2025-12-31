@@ -249,6 +249,15 @@ export default function AccountMenu({ locale, mobile = false, inMenu = false }: 
                 
                 {/* Dashboard link */}
                 <Link
+                  href={`/${locale}/account-update`}
+                  onClick={handleMenuItemClick}
+                  className="flex items-center space-x-3 px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group"
+                  style={{ color: palette.text }}
+                >
+                  <Settings size={16} className="text-gray-400 group-hover:text-blue-500 transition-colors" />
+                  <span>{t('accountInfo')}</span>
+                </Link>
+                <Link
                   href={`/${locale}/dashboard`}
                   onClick={handleMenuItemClick}
                   className="flex items-center space-x-3 px-4 py-3 text-sm font-medium hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group"
