@@ -47,8 +47,7 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentComplete, setPaymentComplete] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   
   // In your actual implementation, this would come from props or context
 
@@ -85,6 +84,7 @@ const NextPayment: React.FC<MakePaymentProps> = ({ sessionData, paymentProgress,
         dynamicCallbackUrl: process.env.NEXT_PUBLIC_CALLBACK_URL || "",
         installments: plan.installments,
         selectedRoom: room,
+        locale: locale,
       };
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/register`, {
