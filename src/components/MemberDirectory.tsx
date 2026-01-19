@@ -190,10 +190,19 @@ const MemberDirectory: React.FC = () => {
                 </h1>
                 <p
                   className="text-xl leading-relaxed font-medium text-center"
-                  style={{ color: palette.textSecondary }}
+                  style={{
+                    color: palette.textSecondary,
+                  }}
                 >
                   {t("experienceBelizeDesc2")}
+
                 </p>
+                <h1
+                  className="text-5xl font-extrabold leading-tight text-center"
+                  style={{ color: palette.primary }}
+                >
+                  {t("experienceBelizeDesc3")}
+                </h1>
               </div>
 
               <div className="flex flex-col sm:flex-row justify-center sm:space-x-4 space-y-4 sm:space-y-0">
@@ -234,7 +243,7 @@ const MemberDirectory: React.FC = () => {
             {/* Logo and Mobile Video */}
 <div className="relative lg:col-span-1 flex flex-col items-center gap-6">
   <img
-    src="/logo_christmas.png"
+    src="/logo.png"
     alt="Logo"
     className="w-100 h-100 object-contain"
   />
@@ -284,7 +293,7 @@ const MemberDirectory: React.FC = () => {
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: palette.primary }}>
                 <Image
-                    src="/logo_christmas.png"
+                    src="/logo.png"
                     alt="Logo"
                     width={60}
                     height={60}
