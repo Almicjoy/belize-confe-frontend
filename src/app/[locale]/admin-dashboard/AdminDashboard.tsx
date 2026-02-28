@@ -7,6 +7,8 @@ interface Registrant {
   firstName: string;
   lastName: string;
   email: string;
+  countryCode: string;
+  phone: string; 
   country: string;
   club: string;
   age: number | null;
@@ -109,6 +111,8 @@ export default function AdminDashboard() {
       "First Name",
       "Last Name",
       "Email",
+      "Country Code",
+      "Phone",
       "Country",
       "Club",
       "Age",
@@ -137,6 +141,8 @@ export default function AdminDashboard() {
       r.firstName,
       r.lastName,
       r.email,
+      r.countryCode,
+      r.phone,
       r.country,
       r.club,
       r.age ?? "",
@@ -220,6 +226,8 @@ export default function AdminDashboard() {
               {[
                 ["Name", "firstName"],
                 ["Email", "email"],
+                ["Country Code", "countryCode"],
+                ["Phone", "phone"],
                 ["Country", "country"],
                 ["Club", "club"],
                 ["Age", "age"],
@@ -245,6 +253,8 @@ export default function AdminDashboard() {
               <tr key={i} className="border-b hover:bg-gray-50">
                 <td className="p-2 md:p-3 whitespace-nowrap">{u.firstName} {u.lastName}</td>
                 <td className="p-2 md:p-3">{u.email}</td>
+                <td className="p-2 md:p-3">{u.countryCode}</td>
+                <td className="p-2 md:p-3">{u.phone}</td>
                 <td className="p-2 md:p-3">{u.country}</td>
                 <td className="p-2 md:p-3">{u.club}</td>
                 <td className="p-2 md:p-3">{u.age ?? "-"}</td>

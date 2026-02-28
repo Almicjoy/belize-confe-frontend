@@ -56,7 +56,7 @@
             "savings": "Mejor Valor",
             "popular": false,
             "features": ["Acceso inmediato", "Pago único"],
-            "cutoff": "2026-03-01T00:00:00-06:00"
+            "cutoff": "2026-04-10T00:00:00-06:00"
         },
         {
             "id": 2,
@@ -67,7 +67,7 @@
             "savings": null,
             "popular": false,
             "features": ["Dividido en 2 pagos", "Intervalos de 30 días"],
-            "cutoff": "2026-02-01T00:00:00-06:00"
+            "cutoff": "2026-03-15T00:00:00-06:00"
         },
         {
             "id": 3,
