@@ -18,6 +18,7 @@ interface Payment {
   amount: number;
   selectedRoom: string;
   promoCode: string;
+  type: "plan" | "preconfe";
 }
 
 interface Plan {
@@ -389,13 +390,13 @@ const DashboardClient: React.FC = () => {
                       ) : payment ? (
                         <div className="space-y-1">
                           <p className="font-medium text-sm sm:text-base">
-                            {payment.status === "1" ||
-                            payment.status === "DEPOSITED"
-                              ? "✅ Payment Successful!"
-                              : payment.status === "0" ||
-                                payment.status === "DECLINED"
-                              ? "❌ Payment Failed"
-                              : "⏳ Payment Pending"}
+                            {payment.status === "1" || payment.status === "DEPOSITED"
+                              ? payment.type === "preconfe"
+                                ? t('preconfePaymentSuccess')
+                                : t('paymentSuccess')
+                              : payment.status === "0" || payment.status === "DECLINED"
+                              ? t('paymentFailed')
+                              : t('paymentPending')}
                           </p>
                         </div>
                       ) : (

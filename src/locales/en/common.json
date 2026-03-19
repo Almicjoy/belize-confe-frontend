@@ -407,7 +407,7 @@
             "id": 6,
             "name": "Day 4",
             "destination": "Belize City Historic Tour",
-            "price": 1,
+            "price": 20,
             "date": "Thursday, April 30, 2026",
             "time": "Time: 10AM",
             "description": "Tour of Belize City to learn about history, culture, and key landmarks. Great if it's your first time: helps you get oriented, reduces stress, and gives you real context about the country.",
@@ -446,6 +446,9 @@
     "preconfeCheckout": "Checkout →",
     "spots": "Spots",
     "spot": "Spot",
-    "preconfeRegistrationClosed": "Registration closed"
+    "preconfeRegistrationClosed": "Registration closed",
+    "preconfePaymentSuccess": "PreConfe Registration Successful!",
+    "paymentFailed": "Payment Failed",
+    "paymentPending": "Payment Pending"
 
 }

@@ -442,5 +442,8 @@
     "preconfeCheckout": "Pagar →",
     "spots": "Cupos",
     "spot": "Cupo",
-    "preconfeRegistrationClosed": "Inscripciones cerradas"
+    "preconfeRegistrationClosed": "Inscripciones cerradas",
+    "preconfePaymentSuccess": "¡Registro al PreConfe exitoso!",
+    "paymentFailed": "Pago fallido",
+    "paymentPending": "Pago pendiente"
 }
