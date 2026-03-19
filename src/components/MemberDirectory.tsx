@@ -12,6 +12,7 @@ import Accommodations from './Accommodations';
 import SponsorsComponent from './Sponsors';
 import { Instagram } from 'lucide-react';
 import CountdownDrawer from './CountDown';
+import PreConfe from './PreConfe';
 
 if (typeof document !== 'undefined' && !document.getElementById('google-font-poppins')) {
   const link = document.createElement('link');
@@ -241,19 +242,25 @@ const MemberDirectory: React.FC = () => {
             </div>
 
             {/* Logo and Mobile Video */}
-<div className="relative lg:col-span-1 flex flex-col items-center gap-6">
-  <img
-    src="/logo.png"
-    alt="Logo"
-    className="w-100 h-100 object-contain"
-  />
+          <div className="relative lg:col-span-1 flex flex-col items-center gap-6">
+            <img
+              src="/logo.png"
+              alt="Logo"
+              className="w-100 h-100 object-contain"
+            />
 
-  {/* Show video BELOW logo only on small screens */}
-</div>
+            {/* Show video BELOW logo only on small screens */}
+          </div>
 
           </div>
         </div>
       </section>
+
+      <main ref={sponsorsRef} className="w-full relative z-10" style={{ backgroundColor: palette.hobbyBg }}>
+        <div className="w-full px-2 py-4">
+            <SponsorsComponent/>
+        </div>
+      </main>
 
       <main ref={accommodationRef} className="w-full relative z-10" style={{ backgroundColor: palette.hobbyBg }}>
         <div className="w-full px-2 py-4">
@@ -267,22 +274,11 @@ const MemberDirectory: React.FC = () => {
         </div>
       </main>
 
-      <main ref={sponsorsRef} className="w-full relative z-10" style={{ backgroundColor: palette.hobbyBg }}>
-        <div className="w-full px-2 py-4">
-            <SponsorsComponent/>
-        </div>
-      </main>
-
       <section ref={preconfeRef} className="w-full px-2 py-20 relative z-10" style={{ backgroundColor: palette.hobbyBg }}>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: palette.primary }}>
-              {t("preconfe2")}
-            </h2>
-            <p className="text-xl font-medium max-w-2xl mx-auto" style={{ color: palette.textSecondary }}>
-              {t("preconfeComingSoon")}
-            </p>
-          </div>
+        <div className="w-full px-2 py-4">
+
+          <PreConfe/>
+
         </div>
       </section>
 

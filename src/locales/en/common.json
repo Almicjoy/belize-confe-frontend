@@ -265,5 +265,187 @@
     "noClubsFound": "No clubs found. Select 'Other' to enter manually.",
     "searchClub": "Search clubs...",
     "enterClub": "Enter your club",
-    "enterCountry": "Enter your country"
+    "enterCountry": "Enter your country",
+    "preconfeDays": [
+        {
+            "id": 1,
+            "name": "Day 1",
+            "destination": "Xunantunich + Mountain Pine Ridge",
+            "price": 35,
+            "date": "Monday, April 27, 2026",
+            "time": "Time: 9AM - 4PM",
+            "description": "Visit Western Belize on Day 1 of Preconfe with a combo of Mayan Ruin Exploration along with the natural beauty of Belize's Mountain Pine Ridge Landscape.",
+            "maxPersons": "Unlimited Spots",
+            "imagePath": [
+                "day_1_xunantunich.jpeg",
+                "day_1_pine_ridge.jpeg"
+            ],
+            "activityList": [
+                {
+                "name": "Food & Beverage: Lunch"
+                },
+                {
+                "name": "Meeting Point: San Ignacio - [Welcome Center](https://maps.app.goo.gl/29P6avAFWqhHQs276)"
+                },
+                {
+                "name": "Xunantunich: An iconic Maya archaeological site near San Ignacio. The highlight: climbing El Castillo (the main pyramid) and seeing the jungle, river, and vast panoramic views."
+                },
+                {
+                "name": "Rio On Pools: Natural pools and small waterfalls where you can swim and relax."
+                },
+                {
+                "name": "Pine Ridge: A landscape different from the typical “tropical” setting — pine trees, fresh air, trails, and a soft adventure vibe. Perfect if you want to experience natural Belize and take photos in the water."
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Day 2",
+            "destination": "Jaguar Paw",
+            "price": 50,
+            "date": "Tuesday, April 28, 2026",
+            "time": "Time: 8AM - 1PM",
+            "description": "A Jungle adventure park. It's for people looking for adrenaline and a jungle vibe (guided nature activities). Very much an experience-based outing and great for groups.",
+            "maxPersons": "Unlimited Spots",
+            "imagePath": [
+                "day_2_cave_tube.jpeg",
+                "day_2_cave_tube_2.jpeg"
+            ],
+            "activityList": [
+                {
+                "name": "Food & Beverage: None"
+                },
+                {
+                "name": "Meeting Point: San Ignacio - Details TBA"
+                },
+                {
+                "name": "Cave Tubing: Float through ancient limestone caves on an inner tube while guided through underground rivers."
+                }
+
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Day 2 - Night",
+            "destination": "Noche de Omertas/Amazonas/Glamazonas",
+            "price": 0,
+            "date": "Tuesday, April 28, 2026",
+            "time": "Time: 7PM",
+            "description": "Get to Caye Caulker before Day 3 to enjoy Noche de Omertas/Amazonas/Glamazonas. There is no cost for registering for this event, but you will need to pay your personal tabs depending on your bar order. Registration is still required prior to attending this event for record keeping.",
+            "maxPersons": "Unlimited Spots",
+            "imagePath": [
+                "day_2_night_caye.jpg"
+            ],
+            "activityList": [
+                {
+                "name": "Meeting Point: Caye Caulker - Details TBA"
+                },
+                {
+                "name": "Bar Hopping: Join your group (Omerta/Amazona/Glamazona) at your designated bar, then meet up together at the end of the night for a bash."
+                },
+                {
+                "name": "Accommodation: If attending this event, plan to book your own accommodation in Caye Caulker for the overnight."
+                },
+                {
+                "name": "Water Taxi: It's recommended to board the Water Taxi in Belize City at 3PM to attend this event. View the [San Pedro Belize Express water taxi schedule](https://belizewatertaxi.com/schedule/) here. The last boat to Caye Caulker leaves at 5:30 PM."
+                }
+
+            ]
+        },
+        {
+            "id": 4,
+            "name": "Day 3",
+            "destination": "Catamarran Snorkeling Tour",
+            "price": 65,
+            "date": "Wednesday, April 29, 2026",
+            "time": "Time: 9AM - 1PM",
+            "description": "Visit the island famous for its “Go Slow” vibe. Arrive at Caye Caulker and set off on a snorkeling tour that you can't miss!",
+            "maxPersons": "25 Persons Maximum",
+            "imagePath": [
+                "day_3_snorkel.jpg"
+            ],
+            "activityList": [
+                {
+                "name": "Food & Beverage: Light Refreshments"
+                },
+                {
+                "name": "Meeting Point: Caye Caulker - Details TBA"
+                },
+                {
+                "name": "Catamaran Tour: Boat/catamaran tour with stops for swimming/snorkeling and marine life spotting. Ideal for groups because it's social and provides amazing photo opportunities"
+                },
+                {
+                "name": "Water Taxi: Water Taxi fare is not included in this price. If traveling same day, it's recommended to board the 8AM boat to Caye Caulker and return on the 3:30PM boat back to Belize City. View the [San Pedro Belize Express water taxi schedule](https://belizewatertaxi.com/schedule/) here."
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "Day 3 - Night",
+            "destination": "Belize City Party",
+            "price": 35,
+            "date": "Wednesday, April 29, 2026",
+            "time": "Time: 7PM",
+            "description": "Let's head back to Belize City to close out PreConfe with a bang.",
+            "maxPersons": "40 Persons Maximum",
+            "imagePath": [
+                "day_3_belize_city.jpg"
+            ],
+            "activityList": [
+                {
+                "name": "Meeting Point: Belize City - [BTL Park](https://maps.app.goo.gl/2CLHq8yNNV6ypT2k6)."
+                },
+                {
+                "name": "Party Bus: Pre-game with some music, lights, a route through the city."
+                },
+                {
+                "name": "Traveller's Bar: End the night at a local bar."
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "name": "Day 4",
+            "destination": "Belize City Historic Tour",
+            "price": 20,
+            "date": "Thursday, April 30, 2026",
+            "time": "Time: 10AM",
+            "description": "Tour of Belize City to learn about history, culture, and key landmarks. Great if it's your first time: helps you get oriented, reduces stress, and gives you real context about the country.",
+            "maxPersons": "Unlimited Spots",
+            "imagePath": [
+                "day_4_belize_city.jpg"
+            ],
+            "activityList": [
+                {
+                "name": "Meeting Point: Belize City - [Fort George Area](https://maps.app.goo.gl/oPwjPMvtej5Be2Uo9)"
+                }
+            ]
+
+        }
+ 
+    ],
+    "addToAccount": "Add to My Account",
+    "loginRequired": "You'll be asked to log in if you haven't already.",
+    "preConferenceDesc": "Purchase PreConfe packages here. View the PreConfe offerings below. Note that you can only purchase PreConfe packages if you have fully paid for your Conference spot.",
+    "preconfeTitle": "PreConfe Packages",
+    "preconfeCart": "Cart",
+    "preconfeItem": "item",
+    "preconfeItems": "items",
+    "preconfePurchaseConfirmed": "Purchase confirmed! Your PreConfe packages are booked.",
+    "preconfePurchased": "Purchased",
+    "preconfeInCart": "In Cart",
+    "preconfeNoFee": "No Registration Fee",
+    "preconfeRemove": "Remove",
+    "preconfeRegisterFree": "Register Free",
+    "preconfeAddToCart": "+ Add to Cart",
+    "preconfeYourCart": "Your Cart",
+    "preconfeCartEmpty": "Your cart is empty.",
+    "preconfeFree": "Free",
+    "preconfeTotal": "Total",
+    "preconfeProcessing": "Processing…",
+    "preconfeCheckout": "Checkout →",
+    "spots": "Spots",
+    "spot": "Spot",
+    "preconfeRegistrationClosed": "Registration closed"
+
 }

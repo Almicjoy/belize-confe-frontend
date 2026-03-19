@@ -265,5 +265,182 @@
     "noClubsFound": "No se encontraron clubes. Selecciona 'Otro' para ingresarlo manualmente.",
     "searchClub": "Buscar clubes...",
     "enterClub": "Ingresa tu club",
-    "enterCountry": "Ingresa tu país"
+    "enterCountry": "Ingresa tu país",
+    "preconfeDays": [
+        {
+            "id": 1,
+            "name": "Día 1",
+            "destination": "Xunantunich + Mountain Pine Ridge",
+            "price": 35,
+            "date": "Lunes, 27 de abril de 2026",
+            "time": "Hora: 9AM - 4PM",
+            "description": "Visita el oeste de Belice en el Día 1 de Preconfe con una combinación de exploración de ruinas mayas junto con la belleza natural del paisaje de Mountain Pine Ridge.",
+            "maxPersons": "Cupos ilimitados",
+            "imagePath": [
+                "day_1_xunantunich.jpeg",
+                "day_1_pine_ridge.jpeg"
+            ],
+            "activityList": [
+                {
+                    "name": "Comida y bebida: Almuerzo"
+                },
+                {
+                    "name": "Punto de encuentro: San Ignacio - [Centro de Bienvenida](https://maps.app.goo.gl/29P6avAFWqhHQs276)"
+                },
+                {
+                    "name": "Xunantunich: Un icónico sitio arqueológico maya cerca de San Ignacio. Lo más destacado: subir El Castillo (la pirámide principal) y disfrutar de vistas panorámicas de la selva, el río y el paisaje."
+                },
+                {
+                    "name": "Rio On Pools: Piscinas naturales y pequeñas cascadas donde puedes nadar y relajarte."
+                },
+                {
+                    "name": "Pine Ridge: Un paisaje diferente al típico entorno “tropical”: pinos, aire fresco, senderos y un ambiente de aventura ligera. Perfecto para experimentar la naturaleza de Belice y tomar fotos en el agua."
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Día 2",
+            "destination": "Jaguar Paw",
+            "price": 50,
+            "date": "Martes, 28 de abril de 2026",
+            "time": "Hora: 8AM - 1PM",
+            "description": "Un parque de aventuras en la selva. Ideal para personas que buscan adrenalina y un ambiente selvático (actividades guiadas en la naturaleza). Una experiencia muy dinámica y excelente para grupos.",
+            "maxPersons": "Cupos ilimitados",
+            "imagePath": [
+                "day_2_cave_tube.jpeg",
+                "day_2_cave_tube_2.jpeg"
+            ],
+            "activityList": [
+                {
+                    "name": "Comida y bebida: Ninguna"
+                },
+                {
+                    "name": "Punto de encuentro: San Ignacio - Detalles por confirmar"
+                },
+                {
+                    "name": "Tubing en cuevas: Flota a través de cuevas de piedra caliza en un tubo inflable mientras eres guiado por ríos subterráneos."
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Día 2 - Noche",
+            "destination": "Noche de Omertas/Amazonas/Glamazonas",
+            "price": 0,
+            "date": "Martes, 28 de abril de 2026",
+            "time": "Hora: 7PM",
+            "description": "Llega a Caye Caulker antes del Día 3 para disfrutar de la Noche de Omertas/Amazonas/Glamazonas. No hay costo de registro para este evento, pero deberás pagar tus consumos personales según tu orden en el bar. El registro sigue siendo obligatorio para control de asistencia.",
+            "maxPersons": "Cupos ilimitados",
+            "imagePath": [
+                "day_2_night_caye.jpg"
+            ],
+            "activityList": [
+                {
+                    "name": "Punto de encuentro: Caye Caulker - Detalles por confirmar"
+                },
+                {
+                    "name": "Recorrido de bares: Únete a tu grupo (Omerta/Amazona/Glamazona) en tu bar asignado y luego reúnanse todos al final de la noche para una gran fiesta."
+                },
+                {
+                    "name": "Alojamiento: Si asistirás a este evento, planifica reservar tu propio alojamiento en Caye Caulker para pasar la noche."
+                },
+                {
+                    "name": "Taxi acuático: Se recomienda abordar el taxi acuático en Belize City a las 3PM para asistir a este evento. Consulta el horario de San Pedro Belize Express aquí: https://belizewatertaxi.com/schedule/. El último barco hacia Caye Caulker sale a las 5:30 PM."
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "Día 3",
+            "destination": "Tour de Snorkel en Catamarán",
+            "price": 65,
+            "date": "Miércoles, 29 de abril de 2026",
+            "time": "Hora: 9AM - 1PM",
+            "description": "Visita la isla famosa por su ambiente de “Go Slow”. ¡Llega a Cayo Caulker y emprende un tour de snorkel que no te puedes perder!",
+            "maxPersons": "Máximo 25 personas",
+            "imagePath": [
+                "day_3_snorkel.jpg"
+            ],
+            "activityList": [
+                {
+                    "name": "Comida y bebida: Refrigerios ligeros"
+                },
+                {
+                    "name": "Punto de encuentro: Caye Caulker - Detalles por confirmar"
+                },
+                {
+                    "name": "Tour en catamarán: Paseo en barco/catamarán con paradas para nadar, hacer snorkel y observar vida marina. Ideal para grupos porque es social y ofrece excelentes oportunidades para fotos."
+                },
+                {
+                    "name": "Taxi acuático: La tarifa no está incluida. Si viajas el mismo día, se recomienda tomar el barco de las 8AM hacia Caye Caulker y regresar en el de las 3:30PM a Belize City. Consulta el horario aquí: https://belizewatertaxi.com/schedule/."
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "Día 3 - Noche",
+            "destination": "Fiesta en Belize City",
+            "price": 35,
+            "date": "Miércoles, 29 de abril de 2026",
+            "time": "Hora: 7PM",
+            "description": "Regresemos a Belize City para cerrar el PreConfe con broche de oro.",
+            "maxPersons": "Máximo 40 personas",
+            "imagePath": [
+                "day_3_belize_city.jpg"
+            ],
+            "activityList": [
+                {
+                    "name": "Punto de encuentro: Belize City - [Parque BTL](https://maps.app.goo.gl/2CLHq8yNNV6ypT2k6)."
+                },
+                {
+                    "name": "Party Bus: Previa con música, luces y recorrido por la ciudad."
+                },
+                {
+                    "name": "Bar Traveller's: Termina la noche en un bar local."
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "name": "Día 4",
+            "destination": "Tour histórico de Belize City",
+            "price": 20,
+            "date": "Jueves, 30 de abril de 2026",
+            "time": "Hora: 10AM",
+            "description": "Recorrido por Belize City para aprender sobre su historia, cultura y principales puntos de interés. Ideal si es tu primera vez: te ayuda a orientarte, reduce el estrés y te da un contexto real del país.",
+            "maxPersons": "Cupos ilimitados",
+            "imagePath": [
+                "day_4_belize_city.jpg"
+            ],
+            "activityList": [
+                {
+                    "name": "Punto de encuentro: Belize City - [Área Fort George](https://maps.app.goo.gl/oPwjPMvtej5Be2Uo9)"
+                }
+            ]
+        }
+    ],
+    "addToAccount": "Agregar a mi cuenta",
+    "loginRequired": "Se te pedirá iniciar sesión si aún no lo has hecho.",
+    "preConferenceDesc": "Compra los paquetes de PreConfe aquí. Consulta las ofertas de PreConfe a continuación. Ten en cuenta que solo puedes comprar paquetes de PreConfe si has pagado completamente tu inscripción a la Conferencia.",
+    "preconfeTitle": "Paquetes PreConfe",
+    "preconfeCart": "Carrito",
+    "preconfeItem": "artículo",
+    "preconfeItems": "artículos",
+    "preconfePurchaseConfirmed": "¡Compra confirmada! Tus paquetes PreConfe están reservados.",
+    "preconfePurchased": "Comprado",
+    "preconfeInCart": "En el carrito",
+    "preconfeNoFee": "Sin costo de registro",
+    "preconfeRemove": "Eliminar",
+    "preconfeRegisterFree": "Registrarse gratis",
+    "preconfeAddToCart": "+ Agregar al carrito",
+    "preconfeYourCart": "Tu carrito",
+    "preconfeCartEmpty": "Tu carrito está vacío.",
+    "preconfeFree": "Gratis",
+    "preconfeTotal": "Total",
+    "preconfeProcessing": "Procesando…",
+    "preconfeCheckout": "Pagar →",
+    "spots": "Cupos",
+    "spot": "Cupo",
+    "preconfeRegistrationClosed": "Inscripciones cerradas"
 }

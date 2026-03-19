@@ -7,6 +7,7 @@ import SelectPlan from "./SelectPlan";
 import { useTranslation } from "@/utils/useTranslation";
 import { palette } from "@/lib/palette";
 import MakePayment from "./MakePayment";
+import DashboardPreconfe from "./DashboardPreconfe";
 
 interface Payment {
   orderNumber: string;
@@ -638,6 +639,19 @@ const DashboardClient: React.FC = () => {
               </div>
             )}
           </div>
+
+          {/* -------------------------------------- */}
+          {/* PreConfe Section (Unlocked after full payment) */}
+          {/* -------------------------------------- */}
+
+          {paymentProgress.total > 0 &&
+          paymentProgress.completed === paymentProgress.total && (
+           <div className="mt-10 rounded-2xl sm:rounded-3xl sm:p-6 lg:p-8 border shadow-lg bg-white">
+
+            <DashboardPreconfe sessionData={user} />
+            
+          </div>
+          )}
         </div>
       </div>
     </div>

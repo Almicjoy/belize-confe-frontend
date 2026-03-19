@@ -70,7 +70,7 @@ const Accommodations: React.FC = () => {
           </p>
 
           {/* Venue Info */}
-          <div className="inline-flex items-center justify-center p-6 rounded-2xl mb-8"
+          {/* <div className="inline-flex items-center justify-center p-6 rounded-2xl mb-8"
                style={{ backgroundColor: palette.lightOrange, border: `2px solid ${palette.cardBorder}` }}>
             <div className="text-center">
               <div className="flex items-center justify-center space-x-2 mb-1">
@@ -95,7 +95,7 @@ const Accommodations: React.FC = () => {
                 <ExternalLink size={16} />
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Room Grid */}

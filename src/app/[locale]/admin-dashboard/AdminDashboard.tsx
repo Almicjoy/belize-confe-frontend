@@ -8,7 +8,7 @@ interface Registrant {
   lastName: string;
   email: string;
   countryCode: string;
-  phone: string; 
+  phone: string;
   country: string;
   club: string;
   age: number | null;
@@ -22,12 +22,21 @@ interface Registrant {
   dateRegistered: string | null;
   firstPaymentDate: string | null;
   lastPaymentDate: string | null;
+  preconfe1: boolean;
+  preconfe2: boolean;
+  preconfe3: boolean;
+  preconfe4: boolean;
+  preconfe5: boolean;
+  preconfe6: boolean;
 }
 
 type SortOrder = "asc" | "desc";
 
+const PRECONFE_IDS = [1, 2, 3, 4, 5, 6] as const;
+
 export default function AdminDashboard() {
   const [data, setData] = useState<Registrant[]>([]);
+  const [preconfeTitles, setPreconfeTitles] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -44,11 +53,10 @@ export default function AdminDashboard() {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/registrants`);
         const json = await res.json();
-
-        if (!json.success) {
-          setError("Failed to load data");
-        } else {
+        if (!json.success) setError("Failed to load data");
+        else {
           setData(json.data);
+          setPreconfeTitles(json.preconfeTitles || {});
         }
       } catch (err) {
         console.error(err);
@@ -57,7 +65,6 @@ export default function AdminDashboard() {
         setLoading(false);
       }
     };
-
     loadData();
   }, []);
 
@@ -67,95 +74,58 @@ export default function AdminDashboard() {
 
   const filteredData = useMemo(() => {
     let result = [...data];
-
     if (search.trim()) {
       const term = search.toLowerCase();
       result = result.filter(r => JSON.stringify(r).toLowerCase().includes(term));
     }
-
     if (countryFilter) result = result.filter(r => r.country === countryFilter);
     if (roomFilter) result = result.filter(r => r.roomName === roomFilter);
     if (promoFilter) result = result.filter(r => r.promoCode === promoFilter);
-
     if (sortColumn) {
       result.sort((a, b) => {
         const aVal = a[sortColumn];
         const bVal = b[sortColumn];
-
         if (aVal === null) return 1;
         if (bVal === null) return -1;
-
-        if (typeof aVal === "number" && typeof bVal === "number") {
+        if (typeof aVal === "number" && typeof bVal === "number")
           return sortOrder === "asc" ? aVal - bVal : bVal - aVal;
-        }
-
         return sortOrder === "asc"
           ? String(aVal).localeCompare(String(bVal))
           : String(bVal).localeCompare(String(aVal));
       });
     }
-
     return result;
   }, [data, search, countryFilter, roomFilter, promoFilter, sortColumn, sortOrder]);
 
   const handleSort = (column: keyof Registrant) => {
     if (column === sortColumn) setSortOrder(prev => (prev === "asc" ? "desc" : "asc"));
-    else {
-      setSortColumn(column);
-      setSortOrder("asc");
-    }
+    else { setSortColumn(column); setSortOrder("asc"); }
   };
 
   const downloadCSV = () => {
     const headers = [
-      "First Name",
-      "Last Name",
-      "Email",
-      "Country Code",
-      "Phone",
-      "Country",
-      "Club",
-      "Age",
-      "Room",
-      "Payment Plan ID",
-      "Number of Payments",
-      "Amount Paid",
-      "Full Price",
-      "Full Price After Discount",
-      "Promo Code",
-      "Date Registered",
-      "First Payment Date",
-      "Last Payment Date",
+      "First Name", "Last Name", "Email", "Country Code", "Phone",
+      "Country", "Club", "Age", "Room", "Payment Plan ID",
+      "Number of Payments", "Amount Paid", "Full Price", "Full Price After Discount",
+      "Promo Code", "Date Registered", "First Payment Date", "Last Payment Date",
+      "PreConfe 1", "PreConfe 2", "PreConfe 3", "PreConfe 4", "PreConfe 5", "PreConfe 6",
     ];
 
     const formatDate = (dateStr: string | null) => {
       if (!dateStr) return "";
       const date = new Date(dateStr);
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${month}/${day}/${year}`;
+      return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()}`;
     };
 
     const rows = filteredData.map(r => [
-      r.firstName,
-      r.lastName,
-      r.email,
-      r.countryCode,
-      r.phone,
-      r.country,
-      r.club,
-      r.age ?? "",
-      r.roomName ?? "",
-      r.paymentPlanId ?? "",
-      r.numberOfPayments ?? "",
+      r.firstName, r.lastName, r.email, r.countryCode, r.phone,
+      r.country, r.club, r.age ?? "", r.roomName ?? "",
+      r.paymentPlanId ?? "", r.numberOfPayments ?? "",
       r.amountPaid != null ? (r.amountPaid / 2 / 100).toFixed(2) : "",
-      r.fullPrice ?? "",
-      r.fullPriceAfterDiscount ?? "",
+      r.fullPrice ?? "", r.fullPriceAfterDiscount ?? "",
       r.promoCode ?? "",
-      formatDate(r.dateRegistered),
-      formatDate(r.firstPaymentDate),
-      formatDate(r.lastPaymentDate),
+      formatDate(r.dateRegistered), formatDate(r.firstPaymentDate), formatDate(r.lastPaymentDate),
+      ...PRECONFE_IDS.map(id => r[`preconfe${id}` as keyof Registrant] ? "TRUE" : "FALSE"),
     ]);
 
     const csvContent = [
@@ -165,8 +135,7 @@ export default function AdminDashboard() {
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
+    link.setAttribute("href", URL.createObjectURL(blob));
     link.setAttribute("download", `registrants-${new Date().toISOString().split("T")[0]}.csv`);
     link.style.visibility = "hidden";
     document.body.appendChild(link);
@@ -177,32 +146,39 @@ export default function AdminDashboard() {
   if (loading) return <div className="p-8 text-center text-xl font-semibold">Loading...</div>;
   if (error) return <div className="p-8 text-center text-red-600 font-semibold">{error}</div>;
 
+  const mainColumns: [string, keyof Registrant][] = [
+    ["Name", "firstName"], ["Email", "email"], ["Country Code", "countryCode"],
+    ["Phone", "phone"], ["Country", "country"], ["Club", "club"], ["Age", "age"],
+    ["Room", "roomName"], ["Installments", "paymentPlanId"], ["Payments", "numberOfPayments"],
+    ["Paid", "amountPaid"], ["Full Price", "fullPrice"], ["After Discount", "fullPriceAfterDiscount"],
+    ["Promo", "promoCode"], ["Registered", "dateRegistered"],
+    ["First Payment", "firstPaymentDate"], ["Last Payment", "lastPaymentDate"],
+  ];
+
+  const preconfeColumns: [string, keyof Registrant][] = PRECONFE_IDS.map(id => [
+    preconfeTitles[String(id)] || `PreConfe ${id}`,
+    `preconfe${id}` as keyof Registrant
+  ]);
+  
   return (
     <div className="p-4 md:p-6 overflow-x-auto space-y-4 md:space-y-6 mt-16 md:mt-20">
       <h1 className="text-2xl md:text-3xl font-bold">Admin Dashboard</h1>
 
-      {/* Search and filters */}
       <div className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4 items-stretch sm:items-center justify-between">
         <div className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4 items-stretch sm:items-center flex-1">
           <input type="text" placeholder="Search..." className="border px-3 py-2 rounded w-full sm:w-64"
-                 value={search} onChange={e => setSearch(e.target.value)} />
+            value={search} onChange={e => setSearch(e.target.value)} />
           <select className="border px-3 py-2 rounded w-full sm:w-auto" value={countryFilter} onChange={e => setCountryFilter(e.target.value)}>
             <option value="">Filter by Country</option>
-            {availableCountries.map(c => (
-              <option key={c} value={c ?? ""}>{c}</option>
-              ))}
+            {availableCountries.map(c => <option key={c} value={c ?? ""}>{c}</option>)}
           </select>
           <select className="border px-3 py-2 rounded w-full sm:w-auto" value={roomFilter} onChange={e => setRoomFilter(e.target.value)}>
             <option value="">Filter by Room</option>
-            {availableRooms.map(r => (
-              <option key={r} value={r ?? ""}>{r}</option>
-              ))}
+            {availableRooms.map(r => <option key={r} value={r ?? ""}>{r}</option>)}
           </select>
           <select className="border px-3 py-2 rounded w-full sm:w-auto" value={promoFilter} onChange={e => setPromoFilter(e.target.value)}>
             <option value="">Filter by Promo Code</option>
-            {availablePromos.map(p => (
-              <option key={p} value={p ?? ""}>{p}</option>
-            ))}
+            {availablePromos.map(p => <option key={p} value={p ?? ""}>{p}</option>)}
           </select>
         </div>
         <button
@@ -218,31 +194,21 @@ export default function AdminDashboard() {
         </button>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto -mx-4 md:mx-0">
+      <div className="overflow-auto w-full" style={{ height: 'calc(100vh - 280px)' }}>
+        <div className="min-w-max">
         <table className="min-w-full border border-gray-300 bg-white text-xs sm:text-sm">
           <thead>
             <tr className="bg-gray-100 border-b">
-              {[
-                ["Name", "firstName"],
-                ["Email", "email"],
-                ["Country Code", "countryCode"],
-                ["Phone", "phone"],
-                ["Country", "country"],
-                ["Club", "club"],
-                ["Age", "age"],
-                ["Room", "roomName"],
-                ["Installments", "paymentPlanId"],
-                ["Payments", "numberOfPayments"],
-                ["Paid", "amountPaid"],
-                ["Full Price", "fullPrice"],
-                ["After Discount", "fullPriceAfterDiscount"],
-                ["Promo", "promoCode"],
-                ["Registered", "dateRegistered"],
-                ["First Payment", "firstPaymentDate"],
-                ["Last Payment", "lastPaymentDate"],
-              ].map(([label, key]) => (
-                <th key={key} className="p-2 md:p-3 text-left cursor-pointer select-none whitespace-nowrap" onClick={() => handleSort(key as keyof Registrant)}>
+              {mainColumns.map(([label, key]) => (
+                <th key={key} className="p-2 md:p-3 text-left cursor-pointer select-none whitespace-nowrap"
+                  onClick={() => handleSort(key)}>
+                  {label}{sortColumn === key && <span className="ml-1">{sortOrder === "asc" ? "▲" : "▼"}</span>}
+                </th>
+              ))}
+              {/* PreConfe columns with distinct header background */}
+              {preconfeColumns.map(([label, key]) => (
+                <th key={key} className="p-2 md:p-3 text-left cursor-pointer select-none whitespace-nowrap bg-blue-50"
+                  onClick={() => handleSort(key)}>
                   {label}{sortColumn === key && <span className="ml-1">{sortOrder === "asc" ? "▲" : "▼"}</span>}
                 </th>
               ))}
@@ -268,10 +234,22 @@ export default function AdminDashboard() {
                 <td className="p-2 md:p-3 whitespace-nowrap">{u.dateRegistered ? new Date(u.dateRegistered).toLocaleDateString() : "-"}</td>
                 <td className="p-2 md:p-3 whitespace-nowrap">{u.firstPaymentDate ? new Date(u.firstPaymentDate).toLocaleDateString() : "-"}</td>
                 <td className="p-2 md:p-3 whitespace-nowrap">{u.lastPaymentDate ? new Date(u.lastPaymentDate).toLocaleDateString() : "-"}</td>
+                {/* PreConfe cells */}
+                {PRECONFE_IDS.map(id => {
+                  const val = u[`preconfe${id}` as keyof Registrant] as boolean;
+                  return (
+                    <td key={id} className="p-2 md:p-3 text-center bg-blue-50/40">
+                      {val
+                        ? <span className="text-green-600 font-bold">✓</span>
+                        : <span className="text-gray-300">✗</span>}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );
