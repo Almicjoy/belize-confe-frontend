@@ -645,14 +645,13 @@ const DashboardClient: React.FC = () => {
           {/* PreConfe Section (Unlocked after full payment) */}
           {/* -------------------------------------- */}
 
-          {paymentProgress.total > 0 &&
-          paymentProgress.completed === paymentProgress.total && (
+
            <div className="mt-10 rounded-2xl sm:rounded-3xl sm:p-6 lg:p-8 border shadow-lg bg-white">
 
             <DashboardPreconfe sessionData={user} />
             
           </div>
-          )}
+
         </div>
       </div>
     </div>
