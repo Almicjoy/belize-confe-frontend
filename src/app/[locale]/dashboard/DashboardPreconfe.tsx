@@ -41,7 +41,7 @@ interface SessionData {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 /** No new purchases after this date (midnight UTC). */
-const PURCHASE_CUTOFF = new Date("2026-04-15T00:00:00.000Z");
+const PURCHASE_CUTOFF = new Date("2026-05-01T00:00:00-06:00");
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
