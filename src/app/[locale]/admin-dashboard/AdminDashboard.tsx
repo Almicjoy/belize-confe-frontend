@@ -108,7 +108,7 @@ export default function AdminDashboard() {
       "Country", "Club", "Age", "Room", "Payment Plan ID",
       "Number of Payments", "Amount Paid", "Full Price", "Full Price After Discount",
       "Promo Code", "Date Registered", "First Payment Date", "Last Payment Date",
-      "PreConfe 1", "PreConfe 2", "PreConfe 3", "PreConfe 4", "PreConfe 5", "PreConfe 6",
+      "Day 1", "Day 2", "Day 2 Night", "Day 3", "Day 3 Night", "Day 4",
     ];
 
     const formatDate = (dateStr: string | null) => {
